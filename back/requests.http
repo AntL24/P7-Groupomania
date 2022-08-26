@@ -1,0 +1,44 @@
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+"name_surname":"teqs22dfs sdfsdfst",
+"email":"tesaat@efe.fr",
+"password":"te3445st"}
+
+####################################################
+
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+"email":"tesaat@efe.fr",
+"password":"te3445st" }
+
+####################################################
+# Create a new post with valid authorization header.
+# 
+POST http://localhost:5000/api/post/
+Content-Type: multipart/form-data; multipart/form-data; boundary= separation
+Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2MTQyNjQ0MiwiZXhwIjoxNjYxNTEyODQyfQ.5TD5L2rnccSdvrrFdQC4nZjVjnLoDOMv6CUaA93Rgv0
+
+--separation
+
+Content-Disposition: form-data; name="image"; filename="12348024_1150631324960893_344096225642532672_n.jpg"
+Content-Type: image/jpeg
+
+
+
+--separation--
+
+####################################################
+
+
+
+# postRouter.get("/", sendPosts);
+# postRouter.post("/", upload.single("image"), makePost);
+# postRouter.get("/:id", sendPostCorrespondingToId);
+# postRouter.delete("/:id", matchingUserID, deletePost);
+# postRouter.put("/:id", matchingUserID, upload.single("image"), modifyPost);
+
+
