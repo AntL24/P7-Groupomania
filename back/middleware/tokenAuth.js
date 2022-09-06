@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 //Function to verify user when login. Verify header and token.
 function authenticateUser(req, res, next){
     const header = req.header("Authorization");
-    if (header == null) return res.status(403).send({ message: "Invalid authorization header" });
+    if (header == null) return res.status(403).send({ message: "Invalid authorization header: null" });
 
     const token = header.split(" ")[1];// Selecting the token part of the headers
     if (token == null) return res.status(403).send({ message: "Token is required" });
