@@ -2,7 +2,11 @@ require("dotenv").config();
 
 const bcrypt = require("bcryptjs");
 const client = require("../pgsql_db");
+// Change to pool ? Client ? To see if it limits the duplicates console.log()
 const jwt = require ("jsonwebtoken");
+
+// pool.query vs client.query difference ?
+// 
 
 ///////////////////
 //Signup function//
@@ -13,10 +17,12 @@ async function saveNewUser(req, res) {
     const hashedPassword = await passwordHasher(password);//Storing user information with a hashed password.
     console.log(hashedPassword, email, password, name_surname);
     await client.query(`INSERT INTO users (email, password, name_surname) VALUES ('${email}', '${hashedPassword}', '${name_surname}')`);
-    client.end();
     res.status(201).send({message: "User created"});
     } catch (err) {
-        client.end();
+        if (err.code === "23505") {
+            return res.status(401).send({message: "User already exists"});
+        }   
+        console.log(err);
         res.status(409).send({message: "Error creating user: " + err})
     }
 }
@@ -32,14 +38,14 @@ async function loginUser(req, res) {
     const userId = user.rows[0].id;
     const isPasswordValid = await bcrypt.compare(password, user.rows[0].password);
     if (!isPasswordValid) {
-        client.end();
+        client.release
         return res.status(401).send({message: "Invalid credentials"});
     }
     const token = createToken(userId)
-    client.end();
+    client.release
     res.status(200).send({userId : userId, token : token})
     } catch (err) {
-    client.end();
+    client.release
     res.status(500).send({message: "Error logging in: " + err})
     }
 }

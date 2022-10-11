@@ -6,9 +6,11 @@ POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
 {
-"name_surname":"teqs22dfs sdfsdfst",
-"email":"tesaat@efe.fr",
+"name_surname":"taaeqs22dfs sdfsdfst",
+"email":"teaaasaat@efe.fr",
 "password":"te3445st"}
+
+## zer@zer.fr Ab234ZxW
 
 ####################################################
 #Login request######################################
@@ -17,20 +19,53 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-"email":"tesaat@efe.fr",
-"password":"te3445st" }
+"email":"Deuxieme@gmail.com",
+"password":"Ab234ZxW" }
+
 
 #####################################################
 # Create a new post with valid authorization header.#
 #####################################################
 POST http://localhost:5000/api/post/
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
-Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2MjM5MDY3OCwiZXhwIjoxNjYyNDc3MDc4fQ.fpf9-L6Hie_T1WuNWILJHiBJ29r3TdZWwhdpMl8vOxE
+Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2NDQ2NzgxMywiZXhwIjoxNjY0NTU0MjEzfQ.YdNsvftP7A3JIlYk7PqsJiyjSip8P1t5l126b7sm4Yw
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="body"
 
+Ceci est un premier post.Ceci est un premier post.Ceci est un premier post.
 Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+Ceci est un premier post.
+
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="image"; filename="FZ_v4BoXoAAesvy.jpg"
 Content-Type: image/jpg
@@ -43,21 +78,21 @@ Content-Type: image/jpg
 #####################################################
 GET http://localhost:5000/api/post/
 Content-Type: application/json
-Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2MjM5MDY3OCwiZXhwIjoxNjYyNDc3MDc4fQ.fpf9-L6Hie_T1WuNWILJHiBJ29r3TdZWwhdpMl8vOxE
+Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2NDQ2NzgxMywiZXhwIjoxNjY0NTU0MjEzfQ.YdNsvftP7A3JIlYk7PqsJiyjSip8P1t5l126b7sm4Yw
 
 ###########################################################
 # Display a specific post with valid authorization header.#
 ###########################################################
-GET http://localhost:5000/api/post/127
+GET http://localhost:5000/api/post/195
 Content-Type: application/json
-Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2MjM5MDY3OCwiZXhwIjoxNjYyNDc3MDc4fQ.fpf9-L6Hie_T1WuNWILJHiBJ29r3TdZWwhdpMl8vOxE
+Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2NDQ2NzgxMywiZXhwIjoxNjY0NTU0MjEzfQ.YdNsvftP7A3JIlYk7PqsJiyjSip8P1t5l126b7sm4Yw
 
 ###########################################################
 # Modify a specific post with valid authorization header.##
 ###########################################################
-PUT http://localhost:5000/api/post/127
+PUT http://localhost:5000/api/post/195
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
-Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2MjM5MDY3OCwiZXhwIjoxNjYyNDc3MDc4fQ.fpf9-L6Hie_T1WuNWILJHiBJ29r3TdZWwhdpMl8vOxE
+Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2NDQ2NzgxMywiZXhwIjoxNjY0NTU0MjEzfQ.YdNsvftP7A3JIlYk7PqsJiyjSip8P1t5l126b7sm4Yw
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="body"
@@ -73,9 +108,9 @@ Content-Type: image/jpg
 ###########################################################
 # Delete a specific post with valid authorization header.##
 ###########################################################
-DELETE http://localhost:5000/api/post/127
+DELETE http://localhost:5000/api/post/195
 Content-Type: application/json
-Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2MjM5MDY3OCwiZXhwIjoxNjYyNDc3MDc4fQ.fpf9-L6Hie_T1WuNWILJHiBJ29r3TdZWwhdpMl8vOxE
+Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2NDQ2NzgxMywiZXhwIjoxNjY0NTU0MjEzfQ.YdNsvftP7A3JIlYk7PqsJiyjSip8P1t5l126b7sm4Yw
 
 
 #############################################################################################
@@ -87,64 +122,61 @@ Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6
 ###########################################################
 # GET ALL COMMENTS NO MATTER THE POST ID WITH VALID AUTH.##
 ###########################################################
-GET http://localhost:5000/api/post/allcomments
+GET http://localhost:5000/api/post/getEverycomments
 Content-Type: application/json
-Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2MjM5MDY3OCwiZXhwIjoxNjYyNDc3MDc4fQ.fpf9-L6Hie_T1WuNWILJHiBJ29r3TdZWwhdpMl8vOxE
-
-#D'où vient l'erreur 22P02, sachant que j'ai exactement la même requête et une fonction identique pour obtenir tous les posts ?
-
-
+Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2NDQ2NzgxMywiZXhwIjoxNjY0NTU0MjEzfQ.YdNsvftP7A3JIlYk7PqsJiyjSip8P1t5l126b7sm4Yw
 
 ##################################################################
 # CREATE a NEW COMMENT ON A POST with valid authorization header.#
 ##################################################################
-POST http://localhost:5000/api/post/127/comments
+POST http://localhost:5000/api/post/195/comments
 Content-Type: application/json
-Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2MjM5MDY3OCwiZXhwIjoxNjYyNDc3MDc4fQ.fpf9-L6Hie_T1WuNWILJHiBJ29r3TdZWwhdpMl8vOxE
+Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2NDQ2NzgxMywiZXhwIjoxNjY0NTU0MjEzfQ.YdNsvftP7A3JIlYk7PqsJiyjSip8P1t5l126b7sm4Yw
 
 {
-"body":"Voici un commentaire de test SUR POST 127."
+"body":"Commentaire direct"
 }
 
 #############################################################
 # ANSWER a specific COMMENT with valid authorization header.#
 #############################################################
-POST http://localhost:5000/api/post/127/comments/84
+POST http://localhost:5000/api/post/195/comments/252
 Content-Type: application/json
-Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2MjM5MDY3OCwiZXhwIjoxNjYyNDc3MDc4fQ.fpf9-L6Hie_T1WuNWILJHiBJ29r3TdZWwhdpMl8vOxE
+Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2NDQ2NzgxMywiZXhwIjoxNjY0NTU0MjEzfQ.YdNsvftP7A3JIlYk7PqsJiyjSip8P1t5l126b7sm4Yw
 
 {
-"body":"Réponse de test à un commentaire."
+"body":"Réponse à un commentaire"
 }
-
-############################################################################
-# DISPLAY ONLY COMMENTS DIRECTLY RESPONDING TO POST with valid authorization header.#
-############################################################################
-GET http://localhost:5000/api/post/127/comments
-Content-Type: application/json
-Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2MjM5MDY3OCwiZXhwIjoxNjYyNDc3MDc4fQ.fpf9-L6Hie_T1WuNWILJHiBJ29r3TdZWwhdpMl8vOxE
 
 ###################################################################
 # DISPLAY EVERY COMMENT ON A POST with valid authorization header.#
 ###################################################################
-GET http://localhost:5000/api/post/127/allcomments
+# # Send page and limit in the request parameters.
+GET http://localhost:5000/api/post/172/comments
 Content-Type: application/json
-Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2MjM5MDY3OCwiZXhwIjoxNjYyNDc3MDc4fQ.fpf9-L6Hie_T1WuNWILJHiBJ29r3TdZWwhdpMl8vOxE
+
+Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2NDQ2NzgxMywiZXhwIjoxNjY0NTU0MjEzfQ.YdNsvftP7A3JIlYk7PqsJiyjSip8P1t5l126b7sm4Yw
+
+###################################################################
+# GET http://localhost:5000/api/post/172/comments
+# Content-Type: application/json
+
+# Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2NDQ2NzgxMywiZXhwIjoxNjY0NTU0MjEzfQ.YdNsvftP7A3JIlYk7PqsJiyjSip8P1t5l126b7sm4Yw
 
 
 ################################################################
 # DISPLAY ANSWERS TO A COMMENT with valid authorization header.#
 ################################################################
-GET http://localhost:5000/api/post/127/comments/80
+GET http://localhost:5000/api/post/172/comments/116
 Content-Type: application/json
-Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2MjM5MDY3OCwiZXhwIjoxNjYyNDc3MDc4fQ.fpf9-L6Hie_T1WuNWILJHiBJ29r3TdZWwhdpMl8vOxE
+Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2NDQ2NzgxMywiZXhwIjoxNjY0NTU0MjEzfQ.YdNsvftP7A3JIlYk7PqsJiyjSip8P1t5l126b7sm4Yw
 
 #############################################################
 # MODIFY a specific comment with valid authorization header.#
 #############################################################
 PUT http://localhost:5000/api/post/127/comments/80
 Content-Type: application/json
-Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2MjM5MDY3OCwiZXhwIjoxNjYyNDc3MDc4fQ.fpf9-L6Hie_T1WuNWILJHiBJ29r3TdZWwhdpMl8vOxE
+Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2NDQ2NzgxMywiZXhwIjoxNjY0NTU0MjEzfQ.YdNsvftP7A3JIlYk7PqsJiyjSip8P1t5l126b7sm4Yw
 
 {
     "body":"Voici un commentaire de test modifié."
@@ -154,7 +186,7 @@ Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6
 #############################################################
 DELETE http://localhost:5000/api/post/127/comments/80
 Content-Type: application/json
-Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2MjM5MDY3OCwiZXhwIjoxNjYyNDc3MDc4fQ.fpf9-L6Hie_T1WuNWILJHiBJ29r3TdZWwhdpMl8vOxE
+Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2NDQ2NzgxMywiZXhwIjoxNjY0NTU0MjEzfQ.YdNsvftP7A3JIlYk7PqsJiyjSip8P1t5l126b7sm4Yw
 
 
 #############################################################################################
@@ -167,12 +199,12 @@ Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6
 ############################################################
 # Like or dislike a specific post with valid authorization.#
 ############################################################
-POST http://localhost:5000/api/post/127/like
+POST http://localhost:5000/api/post/206/like
 Content-Type: application/json
-Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2MjM5MDY3OCwiZXhwIjoxNjYyNDc3MDc4fQ.fpf9-L6Hie_T1WuNWILJHiBJ29r3TdZWwhdpMl8vOxE
+Authorization: jwt eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTY2NDQ2NzgxMywiZXhwIjoxNjY0NTU0MjEzfQ.YdNsvftP7A3JIlYk7PqsJiyjSip8P1t5l126b7sm4Yw
 #It will be done by sending a user id and an array containing either 1, 0 or -1 for like, unlike or dislike.#
 
 {
-"like": 1,
+"like": -1,
 "voter_id": 9
 }

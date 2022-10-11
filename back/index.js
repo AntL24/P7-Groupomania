@@ -11,7 +11,7 @@ app.get("/", (req, res) => {
     res.status(200).send("Engine Started, Ready to take off!");
 })
 
-//////////////
+///////////////
 //Middleware://
 app.use("/api/auth", authRouter)
 app.use("/api/post", postRouter)

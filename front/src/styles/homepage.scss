@@ -1,0 +1,249 @@
+// //Apply similar style to auth.scss
+// @import url('https://cdn.rawgit.com/jgthms/minireset.css/master/minireset.min.css');
+@import 'settings.scss';
+
+
+.App{
+    //Should be in row
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    
+    .content{
+        //The nav bar should be placed on the left side of the screen, and the content should be placed on the right side of the screen.
+        display: flex;
+        flex-direction: row;
+        // justify-content: space-between;
+        align-items: center;
+        height: 100%;
+        // width: 100vw;
+        background-color: white;
+
+        font-family: $default-font;
+    }
+
+    //postImage classname will display an image in the post.
+    //It should be a small image, so it will be displayed in the left side of the className post.
+    //postBody will be the main content of the post, at the right side of the postImage.
+    .left-card{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+        width: 20%;
+        background-color: white;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 1.5rem;
+        line-height: 1.5rem;
+        color: black;
+        padding: 0 2rem 0 2rem;
+        margin-right: 2rem;
+        box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
+        header.Header{
+            display: flex;
+            height: 15%;
+        }
+        footer{
+            display: flex;
+            height: 15%;
+        }
+        .logo {
+            height: 5vmin;
+            width: 5vmin;
+        }
+        .Nav{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            height: 70%;
+
+            .searchForm{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 2rem;
+                margin-bottom: 2rem;
+                height: 10vh;
+            }
+            .navLinks{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                align-items: center;
+                height: 80vh;
+                width: 100%;
+                .navLink{
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    width: 100%;
+                    height: 5vh;
+                    margin-bottom: 1rem;
+                    .li{
+                        //Should have a transparent background that will change color when the user hovers over it.
+                        background-color: transparent;
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-between;
+                        align-items: center;
+                        :hover{
+                            background-color: #F2F2F2;
+                        }
+                    }
+                    .navLinkText{
+                        font-style: normal;
+                        font-weight: bold;
+                        font-size: 1.5rem;
+                        line-height: 1.5rem;
+                        color: black;
+                    }
+                    .navLinkIcon{
+                        height: 2.5vmin;
+                        width: 2.5vmin;
+                    }
+                }
+            }
+
+        }
+            
+    }
+    .Home{
+        display: flex;
+        flex-direction: column;
+        .post {
+            max-height: 30%;
+            background-color: white;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
+            .postImage {
+                width: 30%;
+                height: 100%;
+                border-radius: 10px;
+                .img {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 10px;
+                }
+            }
+            .postBody {
+                width: 70%;
+                height: 100%;
+                display: flex;
+                // flex-direction: column;
+                // justify-content: space-between;
+                // align-items: flex-start;
+                padding: 10px;
+            }
+        }
+    }
+}
+
+.PostPage{
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    width: 80%;
+    background-color: white;
+    font-style: normal;
+    font-size: 12px;
+    line-height: 1.5rem;
+    color: black;
+    padding: 2rem;
+    margin-right: 2rem;
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
+    border-radius: 10px;
+    h2{
+        font-style: normal;
+        font-weight: bold;
+        font-size: 1.5rem;
+        line-height: 1.5rem;
+        color: black;
+        margin-bottom: 1rem;
+    }
+
+    .post{
+    //Make sure post doesn't overflow its container
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: baseline;
+    height: 10%;
+    width: 100%;
+    background-color: white;
+
+
+        img{
+            max-width: 10rem;
+        }
+    }
+}
+
+.NewPost{
+    .post{
+        img{
+            max-width: 10rem;
+        }
+    }
+}
+
+.postContentModify{
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
+    border-radius: 10px;
+    padding: 0.5rem;
+    margin: 1rem;
+}
+
+.modifyForm{
+    display: flex;
+    flex-direction: column;
+    //Child elements should take full width of the parent element
+    width: 50%;
+    //Center content
+    align-items: right;
+    margin: 1rem;
+    //There should be a space between the child elements
+    > * {
+        margin-bottom: 0.3rem;
+    }
+    //body text area should adapt to the size of the text
+    textarea{
+        padding: 0.5rem;
+        text-align: justify;
+        min-height: 5rem;
+        width: 100%;
+
+    }
+}
+.modifyButton{
+    margin: 1rem;
+}
+
+.viewMoreReplies{
+    // Button to display all replies to a comment
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    height: 2rem;
+    margin-bottom: 1rem;
+   
+        background-color: transparent;
+        border: none;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 1rem;
+        line-height: 1rem;
+        color: #000000;
+        :hover{
+            color: #F2F2F2;
+    }
+}

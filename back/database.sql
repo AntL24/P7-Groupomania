@@ -24,6 +24,8 @@ CREATE TABLE posts (
     dislikes integer NOT NULL DEFAULT 0,
     usersLiked varchar[], --Array of users who liked the post.
     usersDisliked varchar[],
+    -- votersId is an array containing the id of all users that liked or disliked.
+    votersId varchar[],
     author_id integer NOT NULL,
 )
 
@@ -66,8 +68,7 @@ CREATE TABLE comments (
 
     --Est-ce que je peux étaler un opération ternaire sur plusieurs lignes pour rendre le code + clair ?
 
-    --Typescript vaut-il mieux que javascript uniquement dans toutes les situations ?
-    --TypeORM vaut-il mieux que Sequelize dans ce contexte (puisque prévu pour typescript directement) ?
+    --Nest et typeORM avec Typescript > all
 
     --A propos des revues de code. Dans le quotidien, quand on débute, j'imagine qu'on se contente de suivre les instructions,
     --sans trop donner son avis. Ou bien est-ce que l'on attend de nous que l'on fasse des code reviews sur les autres aussi ?
