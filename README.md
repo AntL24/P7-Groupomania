@@ -5,9 +5,9 @@ EN
 
 First, clone the project on Github, or download the zip file. Open the resulting folder in vsCode.
 
-For the Frontend, open the terminal on the \front folder and run "npm install" in order to install the dependencies. Type "ng serve" or "npm start" to activate the front server of the site.
+Frontend : open the terminal in the \front folder and run "npm install" in order to install the dependencies. Type "ng serve" or "npm start" to activate the front server of the site.
 
-For the Backend, open the terminal to the \back folder. Install dependencies with "npm i". Load nodemon: "npm install -g nodemon", and finally, launch the back with the command: "nodemon index.js". Don't forget to put the psql server online with pgadmin: the database dump is attached to the project folder.
+Backend : open the terminal in the \back folder. Install dependencies with "npm i". Load nodemon: "npm install -g nodemon", and finally, launch the back with the command: "nodemon index.js". Don't forget to put the psql server online with pgadmin: the database dump is attached to the project folder.
 
 To connect, open localhost:3000 in your browser. In order to register, the user must provide a unique email and a password.
 
