@@ -1,0 +1,68 @@
+.content{
+    width: 100%;
+}
+.NewPost{
+    position: absolute;
+    right: 1%;
+    top: 1%;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    width: 75%;
+    border: 2px solid #e6ecf0;
+    border-radius: 5px;
+    padding: 1rem;
+    margin-bottom: 0.5rem; 
+}
+h2{
+    margin-bottom: 1rem;
+}
+.newPostForm{
+    display: flex;
+    width: 80%;
+    flex-direction: column;
+    padding: 1rem;
+    > * {
+        margin-bottom: 1rem;
+    }
+}
+.newPostBody{
+    min-height: 10rem;
+    min-width: 20rem;
+}
+
+button{
+    border-radius: 1rem;
+    border: none;
+    background-color: #1da1f2;
+    color: white;
+    padding: 0.5rem;
+    max-width: 10rem;
+    &:hover{
+        cursor: pointer;
+        background-color: #1a91da;
+    }
+}
+
+#handleFileSelect{
+    display: none;
+}
+.imageLabel{
+    border: 1px solid #1da1f2;
+    border-radius: 1rem;
+    padding: 0.5rem;
+    max-width: 10rem;
+    &:hover{
+        cursor: pointer;
+        color: #1da1f2;
+    }
+}
+
+@media (max-width: 1024px) {
+    .newPostBody{
+        min-height: 10rem;
+        min-width: 0;
+    }
+}
+    

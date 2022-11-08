@@ -1,51 +1,93 @@
 import { Link } from 'react-router-dom';
-// import votes from './PostInteractions/LikeFunction.js';
-// import comments from './PostInteractions/AddComment.js';
+//Use state to change the color of the heart when clicked
+import React, { useState, useEffect } from 'react';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { faHeart } from '@fortawesome/free-regular-svg-icons';
+import { faHeart as faHeartFull } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsDown } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsDown as faThumbsDownEmpty } from '@fortawesome/free-regular-svg-icons';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 const Post = ({ post, handleLike, handleDelete }) => {
-    const usersdisliked = post.usersdisliked;
-    const usersliked = post.usersliked;
+
+    //Set state for heart color
+    const dislikersId = post.dislikersid;
+    const likersId = post.likersid;
     const likes = post.likes;
     const dislikes = post.dislikes;
-    return (
-        <article className="post">
-            <Link to={`/post/${post.id}`}>
-                {post.shared_picture && <img className="postImage" src={post.shared_picture} alt = "post illustration" />}
-                <button onClick={() => handleDelete(post.author_id, post.id)}>
-                    Delete
-                </button>
-            </Link>
-            <p className="postBody">{
-            (post.body).length <= 25
-                ? post.body//If the post is less than 25 characters long, we display the whole post.
-                : (post.body).slice(0, 25) + "..." //If the post is more than 25 characters long, we display the first 25 characters and add "...".
-            }</p>
+    const userId = localStorage.getItem('userId');
+    const [viewPortWidth, setViewPortWidth] = useState(window.innerWidth);
+    const formatedPost_hour = new Date(post.post_date).toLocaleString();
+    //Shorten the post date to display on mobile : display only how many days/weeks/month/years ago the post was created.
+    const post_date = new Date(post.post_date);
+    const today = new Date();
+    const timeDiff = Math.abs(today.getTime() - post_date.getTime());
+    const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));//
+    const diffWeeks = Math.ceil(timeDiff / (1000 * 3600 * 24 * 7));
+    const diffMonths = Math.ceil(timeDiff / (1000 * 3600 * 24 * 30));
+    const diffYears = Math.ceil(timeDiff / (1000 * 3600 * 24 * 365));
+    //Use the diffDays to display the post date on mobile.
 
-            <Link to={`/modify/${post.id}`}>
-                <button className="modifyButton" type="submit" >
-                    Modify
-                </button>
-            </Link>
-            {/* <Link to={`/post/${post.id}/like`}> */}
+    useEffect(() => {
+        const handleResize = () => setViewPortWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+   
+    return (
+        <Link to={`/post/${post.id}`} style={{color: "inherit", textDecoration: "inherit"}}>
+
+        <article className="post">
+                <span className="AuthorNameAndDate">
+                    <p><FontAwesomeIcon icon={faUser}/>
+                    {post.author_name}</p>
+                    {viewPortWidth > 1024 ? <p>le {formatedPost_hour}</p> : <p>{diffDays < 7 ? diffDays + " jours" : diffWeeks < 4 ? diffWeeks + " sem." : diffMonths < 12 ? diffMonths + " mois" : diffYears + " ans"}</p>}
+                </span>
+               
+                <div className="postContent">
+                        <p className="postBody">{
+                            (post.body).length <= 500
+                                ? post.body//If the post is less than 500 characters long, we display the whole post.
+                                : (post.body).slice(0, 500) + "..." //If the post is more than 500 characters long, we display the first 500 characters and add "...".
+                        }</p>
+                        {post.shared_picture && <img className="postImage" src={post.shared_picture} alt = "post illustration"/>}
+                </div>
+
+            <div className="postInteractions">
                 {/* On click, we pass post.id and a true value to the handleLike function */}
-                <button className="like" type="submit" onClick={() => handleLike(post.id, true, post.likersid)}>
-                    {/* The number of likes and the voter_id can be found in post.likes and post.usersliked*/}
+                <div className="like"
+                    type="submit" onClick={(e) =>
+                        handleLike(e, post.id, true, post.likersid)}>
                     {likes}
-                    <div className="usersDisliked">{usersliked}</div>
-                </button>
-                <button className="dislike" type="submit" onClick={() => handleLike(post.id, false, post.dislikersid)}>
-                    {/* The number of dislikes and the voter_id can be found in post.dislikes and post.usersdisliked*/}
+                    <div className="circle"></div>
+                    {post.likersid && post.likersid.includes(userId) ? <FontAwesomeIcon icon={faHeartFull} className='redHeart'/> : <FontAwesomeIcon icon={faHeart} className='heart'/>}
+                </div>
+                <div className="dislike"
+                    type="submit" onClick={
+                        (e) =>
+                        handleLike(e, post.id, false, post.dislikersid)}>
                     {dislikes}
-                    <div className="usersDisliked">{usersdisliked}</div>
+                    <div className="circle"></div>
+                    {post.dislikersid && post.dislikersid.includes(userId) ? <FontAwesomeIcon icon={faThumbsDown} className='redHeart'/> : <FontAwesomeIcon icon={faThumbsDownEmpty} className='heart'/>}
+                </div>
+                <Link to={`/modify/${post.id}`}>
+                    <button className="modifyButton" type="submit" >
+                       {viewPortWidth > 1024 ?  <p>Modify</p>  :<FontAwesomeIcon icon={faEdit} className='modifyIcon'/>}
+                    </button>
+                </Link>
+                <button onClick={(e) => handleDelete(e, post.author_id, post.id)} className="deleteButton" type="submit" >
+                    {viewPortWidth > 1024 ? <p>Delete</p> : <FontAwesomeIcon icon={faTrash} className='trashIcon'/> }
                 </button>
-            {/* </Link> */}
+
+            </div>
         </article>
+        </Link>
     );
 };
-
-
-//Slice vs substring ? Same thing, but substring is not supported by IE.
-//https://stackoverflow.com/questions/2243824/what-is-the-difference-between-string-slice-and-string-substring
 
 export default Post;

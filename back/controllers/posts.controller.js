@@ -5,7 +5,7 @@ const { request } = require("http");
 
 //sendPosts will send all posts to display on the webpage.
 function sendPosts(req, res){
-    client.query("SELECT * FROM posts ORDER BY post_date DESC")
+    client.query("SELECT * FROM posts ORDER BY post_date ASC")//DESC = descending order, meaning the most recent post will be displayed first.
         .then((posts) => res.send(posts.rows))
         .catch((err) => res.status(500).send(err));
 }
@@ -54,16 +54,16 @@ function deleteOutdatedLocalPicture(req, res, next){
     console.log("In deleteOutdatedLocalPicture, req.body.author_id:", req.body.author_id, "req.body.user_id:", req.body.user_id);
     const author_id = req.body.author_id;
     const user_id = req.body.user_id;
-//Check identity of user. If not authorized, delete the file he may have uploaded, and send a 403 error.
-    if (author_id != user_id && user_id != 1) {
-        // console.log("in deleteOutdatedLocalPicture, user not authorized, as user_id is:", user_id, "and author_id is:", author_id);
-        // console.log("file is:", req.file);
-            const file = req.file;
-            const fileName = file.fileName;
-            const filePath = `images/${fileName}`;
-            // console.log("in deleteOutdatedLocalPicture, deleting file:", filePath);
-            unlink(filePath)
-            return res.status(403).send({ message: "Wrong userId" });
+//Check identity of user. If not authorized, delete the new file he may have uploaded, and send a 403 error.
+    if (author_id != user_id && user_id != 55) {
+        console.log("in deleteOutdatedLocalPicture, user not authorized, as user_id is:", user_id, "and author_id is:", author_id);
+            const file = req.file;//Getting the file from the request, if user is modifying a post.
+            if (file) {
+                const fileName = file.fileName;
+                const filePath = `images/${fileName}`;
+                unlink(filePath);
+            }
+            return res.status(403).send("You are not authorized to modify this post");    
     }
 //The user is confirmed to be the author of the post, or the admin. Proceed to delete the old picture.
     console.log("in deleteOutdatedLocalPicture, searching for picture of selected post.");
@@ -108,7 +108,7 @@ function modifyPost(req, res) {
     return req.protocol + "://" + req.get("host") + "/images/" + fileName;
 }
 
-function makePost(req, res){
+async function makePost(req, res){
 //Making one post and saving it on our sql database.
 
     //checking if a file was provided by user. If not, proceed to create a post without an image, else create a post with an image.
@@ -121,13 +121,17 @@ function makePost(req, res){
     const token = header.split(" ")[1]// Using it to select the token part of the header with split.
     const decodedToken = jwt.verify(token, process.env.JWT_PASSWORD);//Decoding the token with our dotenv password, and putting it into the const decodedToken.
     const userId = decodedToken.userId;//Selecting the userId part of the decodedToken.
+    //Get value of name_surname column in users table, where id = userId, and assign it to the author_name variable.
+    const author_name = await client.query("SELECT name_surname FROM users WHERE id = $1", [userId])
+    console.log('after client.query, author_name is:', author_name.rows[0].name_surname);
+
     
     //Checking if a file was provided by user. If not, proceed to create a post without an image, else create a post with an image.
     const ThereIsANewImage = req.file != null;
 
     if (!ThereIsANewImage){
         //The query will return the row that was created.
-                client.query("INSERT INTO posts (body, author_id, likes, dislikes) VALUES ($1, $2, $3, $4) RETURNING *", [body, userId, 0, 0])
+                client.query("INSERT INTO posts (body, author_id, likes, dislikes, author_name) VALUES ($1, $2, $3, $4, $5) RETURNING *", [body, userId, 0, 0, author_name.rows[0].name_surname])
                     .then((post) => res.status(200).send(post.rows[0]))
                     .catch((err) => res.status(500).send(err));
     } else {
@@ -136,7 +140,7 @@ function makePost(req, res){
         //Using the createImageUrl function to get the new imageUrl from the request fileName.
         const imageUrl = createImageUrl(req, file.fileName);
         //The query will return the row that was created.
-        client.query("INSERT INTO posts (body, author_id, shared_picture, likes, dislikes) VALUES ($1, $2, $3, $4, $5) RETURNING *", [body, userId, imageUrl, 0, 0])
+        client.query("INSERT INTO posts (body, author_id, shared_picture, likes, dislikes, author_name) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *", [body, userId, imageUrl, 0, 0, author_name.rows[0].name_surname])
             .then((post) => res.status(200).send(post.rows[0]))
             .catch((err) => res.status(500).send(err))
     }
@@ -152,8 +156,9 @@ function createComment(req, res){
     const decodedToken = jwt.verify(token, process.env.JWT_PASSWORD);//Decoding the token with our dotenv password, and putting it into the const decodedToken.
     const userId = decodedToken.userId;//Selecting the userId part of the decodedToken.
     const commentId = req.params.commentId;
+    const rootCommentId = req.params.rootId;//Request params are 
     console.log("commentId", commentId);
-    //First, we treat the case where the user is commenting on a post.
+//First, we treat the case where the user is commenting on a post.
     if (commentId == null){
         console.log("commentId is null, user is commenting on a post");
         //Case where the user is commenting on a post. parent_id is the id of the post.
@@ -162,12 +167,25 @@ function createComment(req, res){
             .catch((err) => res.status(500).send(err));
         return
     }
-    //Case where the user is answering a comment.
-    console.log("case where the user is answering a comment");
-    client.query("INSERT INTO comments (body, author_id, parent_id, post_id) VALUES ($1, $2, $3, $4) RETURNING *", [req.body.body, userId, commentId, req.params.id])
-        .then((comment) => res.status(200).send(comment.rows[0]))
-        .catch((err) => res.status(500).send(err));
+//rootId is the id of the oldest comment in the chain, which is directly linked to the post. It is the same for all comments in the chain.
+    if (rootCommentId == 0){
+        console.log("rootId is 0, but commentId is not null, user is commenting on a root comment");
+        //Case where the user is commenting on a root comment. parent_id is the id of the root comment. root_id is the id of the root comment.
+        client.query("INSERT INTO comments (body, author_id, parent_id, post_id, root_comment_id) VALUES ($1, $2, $3, $4, $5) RETURNING *", [req.body.body, userId, commentId, req.params.id, commentId])
+            .then((comment) => res.status(200).send(comment.rows[0]))
+            .catch((err) => res.status(500).send(err));
+        return
+    }
+//Last case, where the user is commenting on a comment that is not a root comment. parent_id is the id of this comment. root_id is the id of the root comment.
+    if (commentId != 0){
+        console.log("user is commenting on a comment that is not a root comment");
+        client.query("INSERT INTO comments (body, author_id, parent_id, post_id, root_comment_id) VALUES ($1, $2, $3, $4, $5) RETURNING *", [req.body.body, userId, commentId, req.params.id, rootCommentId])
+            .then((comment) => res.status(200).send(comment.rows[0]))
+            .catch((err) => res.status(500).send(err));
+        return
+    }
 }
+
 function deleteComment(req, res){
     //Deleting the comment with the id matching our request params.
     client.query("DELETE FROM comments WHERE id = $1", [req.params.commentId])
@@ -180,20 +198,7 @@ function modifyComment(req, res){
         .then((comment) => res.status(200).send(comment.rows[0]))
         .catch((err) => res.status(500).send(err));
 }
-// //send the comments corresponding to the parent_id, which can be a post or a comment.
-//  function getCommentsByParentId(req, res){
-//     const parentCommentId = req.params.commentId
-//     if (parentCommentId){
-//         client.query("SELECT * FROM comments WHERE parent_id = $1", [parentCommentId])
-//             .then((comments) => res.status(200).send(comments.rows))
-//             .catch((err) => res.status(500).send(err));
-//     } else {
-//     const parentPostId = req.params.id
-//     client.query("SELECT * FROM comments WHERE parent_id = $1", [parentPostId]) 
-//         .then((comments) => res.status(200).send(comments.rows))
-//         .catch((err) => res.status(500).send(err));
-//     }
-// }
+
 //Display all comments no matter what the parent_id is, to ease moderation.
 function getAllComments(req, res){
     //Getting all the comments from the database, ordered by comment_date.
@@ -204,8 +209,7 @@ function getAllComments(req, res){
         .then((comment) => console.log("comment", comment))
         .catch((err) => res.status(500).send(console.log("err", err)));
 }
-    //Transforming the result so that we don't have to deal with the error 22P02.
-
+//Transforming the result so that we don't have to deal with the error 22P02.
 function consoleLogTest(req, res){
     console.log("OK, in consoleLogTest");
     res.send("OK, in consoleLogTest");
@@ -213,55 +217,49 @@ function consoleLogTest(req, res){
 
 //Send all comments from a specific post.
  function getCommentsByPostId(req, res){
-    // Get id of last comment sent to client.
-    const cursor = req.params.cursor;
     const postId = req.params.id;
     const limit = req.query.limit;
-    
-    console.log("postId", postId);
-    console.log("limit", limit);
-    console.log("cursor", cursor);
-    //If cursor is null or undefined, we send the first comments.
-    if (cursor == null || cursor == undefined){
-        console.log("cursor is null or undefined");
-        client.query("SELECT * FROM comments WHERE post_id = $1 ORDER BY comment_date ASC LIMIT $2", [postId, limit])
-            .then((comments) => res.status(200).send(comments.rows))
-            .catch((err) => res.status(500).send(err));
-    } else {
-        console.log("cursor is not null or undefined");
-    //Instead of offset and limit, we could use cursor based pagination. It means that we would use the id of the last comment we sent to the client, and then we would send the next comments after that one.
-    client.query("SELECT * FROM comments WHERE id > $1 AND post_id = $2 LIMIT $3", [cursor, postId, limit])
+    const offset = req.query.offset;
+    //ASC is for ascending order, DESC is for descending order. Antechronological order is DESC.
+    console.log(postId);
+    client.query("SELECT * FROM comments WHERE post_id = $1 ORDER BY comment_date ASC", [postId])
         .then((comments) => res.status(200).send(comments.rows))
         .catch((err) => res.status(500).send(err));
-    }
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////:
+//Get all root comments from a specific post.
+function getRootCommentsByPostId(req, res){
+    const postId = req.params.id;
+    const page = req.query.page;
+    const limit = 3;
+    const offset = (page - 1) * limit; //We need to calculate the offset to get the right comments. Page 1 will have an offset of 0, page 2 will have an offset of 5, etc.
+    console.log("page", page, "limit", limit, "offset", offset);
 
-//     console.log("In getCommentsByPostId", "page:", page, "limit:", limit);
-//     //The client.query must not separate nested comments from their parent comments.
-//     // Select the oldest 50 comments
-//     client.query("SELECT * FROM comments WHERE post_id = $1 ORDER BY comment_date ASC LIMIT $2 OFFSET $3", [postId, limit, page])
-//         .then((comments) => {
-//             commentsArray = comments.rows
-//             console.log("commentsArray", commentsArray);
-//             res.status(200).send(commentsArray)
-//         })
-//         .catch((err) => res.status(500).send(err));
-// }
+    //Using the limit and offset to get the comments we want.
+    //root_comment_id is 0 when the comment is a root comment.
+    client.query("SELECT * FROM comments WHERE post_id = $1 AND root_comment_id = 0 ORDER BY comment_date ASC LIMIT $2 OFFSET $3", [postId, limit, offset])
+        .then((comments) => res.status(200).send(comments.rows))
+        .catch((err) => res.status(500).send(err));
+}
+//Get child comments corresponding to a specific root comment.
+function getChildCommentsByRootCommentId(req, res){
+//Root comment id is the id of the comment we want to get all levels of child comments from.
+//This function will be called for each root comment in the frontend, to get all the child comments.
+    const post_id = req.params.id;
+    const rootCommentId = req.params.rootId;
 
-    //Now that commentsArray is filled, we can loop through it to get the comments with parent_id = the comment id.
-           
-    // client.query("WITH RECURSIVE comments_tree AS (SELECT * FROM comments WHERE post_id = $1 AND parent_id IS NULL UNION ALL SELECT c.* FROM comments c INNER JOIN comments_tree ct ON c.parent_id = ct.id) SELECT * FROM comments_tree LIMIT $2 OFFSET $3", [postId, limit, page])
-    //     .then((comments) => res.status(200).send(comments.rows))
-    //     .catch((err) => res.status(500).send(err));
+    const page = req.query.page;
+    const limit = 3;
+    const offset = (page - 1) * limit;
+    console.log("In getChildCommentsByRootCommentId, page", page, "limit", limit, "offset", offset);
     
-    // client.query("WITH RECURSIVE comments_tree AS (SELECT * FROM comments WHERE post_id = $1 AND parent_id IS NULL UNION ALL SELECT c.* FROM comments c INNER JOIN comments_tree ct ON c.parent_id = ct.id) SELECT * FROM comments_tree", [postId])
-    //     .then((comments) => console.log("comments", comments.rows))
-    //We need to paginate the comments and use the limit and offset parameters.
-    //We need to use a recursive query.
-
-
+    //Using limit and offset to paginate the results.
+    client.query("SELECT * FROM comments WHERE post_id = $1 AND root_comment_id = $2 ORDER BY comment_date ASC LIMIT $3 OFFSET $4", [post_id, rootCommentId, limit, offset])
+        //If the query is successful, we send the result.
+        //If not, we tell the user there is no child comment.
+        .then((comments) => res.status(200).send(comments.rows))
+        .catch((err) => res.status(500).send(err));
+}
 
 
     
@@ -362,4 +360,4 @@ async function likePost (req, res) {
             return           
         }
 
-module.exports = {consoleLogTest, deleteOutdatedLocalPicture, handleFilesBeforeModify, sendPosts, makePost, sendPostCorrespondingToId, deletePost, modifyPost, likePost, createComment, deleteComment, modifyComment, getAllComments, getCommentsByPostId};
+module.exports = {consoleLogTest, deleteOutdatedLocalPicture, handleFilesBeforeModify, sendPosts, makePost, sendPostCorrespondingToId, deletePost, modifyPost, likePost, createComment, deleteComment, modifyComment, getAllComments, getCommentsByPostId, getRootCommentsByPostId, getChildCommentsByRootCommentId};

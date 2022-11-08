@@ -1,0 +1,115 @@
+@import 'settings.scss';
+
+    .PostPage{
+        //Position absolute to be able to place the post on the right side of the screen without hindering the scrolling.
+        position: absolute;
+        top: 0;
+        right: 1%;
+        display: flex;
+        flex-direction: column;
+        width: 75%;
+        height: 100%;
+        .post_PostPage{
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: left;
+            border: 2px solid #e6ecf0;
+            border-radius: 5px;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem; 
+        }
+        .postContent{
+            padding-left: 1rem;
+            padding-right: 1rem; 
+            min-height: 3rem;
+            word-break: break-word;
+            // min-width: 80vw;
+            display: flex;
+            flex-direction: column;
+            img{
+                max-width: 50%;
+                border-radius: 10px;
+            }
+        }
+        .redHeart{
+            color: #d35b5b;
+        }
+        .redThumb{
+            color: #d35b5b;
+        }
+        //////////////////////////////////////////////////////////////////////
+        // .postBody{
+        //     margin-top: 2rem;
+        // }
+        .postInteractions{
+            display: inline-flex;
+            padding-top: 1rem;
+            // padding-bottom: 1rem;
+        }
+        //////////////////////////////////////////////////////////////////////
+        .AuthorNameAndDate{
+            display: flex;
+            margin-bottom: 1rem;
+            p{
+                padding-left: 0.5rem;
+            }
+        }
+        //Apply to .heart AND .redHeart
+
+        .heart, .redHeart{
+            margin-left: 0.5rem;
+        }
+        .fa-user{
+            padding-right: 0.5rem;
+
+        }
+        .voted{
+             color: #d35b5b;
+        }
+//         // Both like and dislike, on hover, change color
+        .like, .dislike{
+            //Center content
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            // Circle background
+            border-radius: 50%;
+            width: 1rem;
+            height: 1rem;
+            padding: 1.5rem;
+            &:hover{
+                color: #d35b5b;
+                cursor: pointer;
+            }
+            //When the user clicks on the like or dislike button, the animation should do a full cycle.
+            &:active{
+                .circle{
+                    opacity: 1;
+                    animation: scaleInAndOut 0.15s forwards cubic-bezier(.36, .11, .89, .32);
+                }
+            }
+            .circle{
+                border-radius: 50%;
+                background-color: rgba(255, 100, 100, 0.575);
+                width: 30px;
+                height: 30px;
+                position: absolute;
+                opacity: 0;
+            }   
+        }
+        //Style the button to be round, and have a modern look
+        .postPageButton{
+            border-radius: 1rem;
+            border: none;
+            background-color: #1da1f2;
+            color: white;
+            padding: 0.5rem;
+            margin: 0.5rem;
+            &:hover{
+                cursor: pointer;
+                background-color: #1a91da;
+            }
+        }
+}

@@ -1,52 +1,88 @@
 import { useParams, Link } from 'react-router-dom';
-import Comments from './Comments';
+import { useState, useEffect } from 'react';
 
+import Comments from './Comments';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { faHeart } from '@fortawesome/free-regular-svg-icons';
+import { faHeart as faHeartFull } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsDown } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsDown as faThumbsDownEmpty } from '@fortawesome/free-regular-svg-icons';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 const PostPage = ({ handleLike, posts, handleDelete }) => { //Props are passed from App.js
     const { id } = useParams(); //id is the id of the post we want to display
     const post = posts.find(post => (post.id).toString() === id);//To use strict equality, we need to convert the id to a string.
     console.log('handleLike in PostPage is', handleLike);
+    const userId = localStorage.getItem('userId');
+    const [viewPortWidth, setViewPortWidth] = useState(window.innerWidth);
+    const [comments, setComments] = useState(['']);
+    const [pageCount, setpageCount] = useState(0);
+    let limit = 10;
+
+    useEffect(() => {
+        const handleResize = () => setViewPortWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+
+
+
+
     return (
         <main className="PostPage">
             {post &&
-            <article className="post">
-                <>
-                    <div className="postContent">
-                        <h2>{post.title}</h2>
-                        <p className="postDate">{post.datetime}</p>
-                        <p className="postBody">{post.body}</p>
-                        {post.shared_picture && <img className="postImage" src={post.shared_picture} alt = "post illustration" />}
-                    </div>
-
-                    <div className="postTools">
-                        <button onClick={() => handleDelete(post.author_id, post.id)}>
-                            Delete post
-                        </button>
-                        <Link to={`/modify/${post.id}`}>
-                            <button className="modifyButton" type="submit" >
-                                Modify post
-                            </button>
-                        </Link>
-                        {/* <Link to={`/post/${post.id}/like`}> */}
-                            {/* To know which button the user clicked, we need to pass a boolean value to the handleLike function. True for like, false for dislike. */}
-                            <button className="like" type="submit" onClick={() => handleLike(post.id, true, post.likersid)}>
+                <article className="post_PostPage" style={{color: "inherit", textDecoration: "inherit"}}>
+                    <>
+                        <span className="AuthorNameAndDate">
+                            <p><FontAwesomeIcon icon={faUser}/>
+                            {post.author_name}</p>
+                            {viewPortWidth > 1024 ? <p>le {new Date(post.post_date).toLocaleString()}</p> : <p>{new Date(post.post_date).toLocaleString('default', { month: 'long' })} {new Date(post.post_date).toLocaleString('default', { year: 'numeric' })}</p>}
+                        </span>
+                        <div className="postContent">
+                            <p className="postDate">{post.datetime}</p>
+                            <p className="postBody">{post.body}</p>
+                            {post.shared_picture && <img className="postImage" src={post.shared_picture} alt = "post illustration"
+                            />}
+                        </div>
+                        <div className="postInteractions">
+                            <div className="like"
+                            type="submit" onClick={(e) =>
+                                handleLike(e, post.id, true, post.likersid)}>
                                 {post.likes}
-                                <div className="usersLiked">{post.usersliked}</div>
-                            </button>
-                            <button className="dislike" type="submit" onClick={() => handleLike(post.id, false, post.dislikersid )}>
+                                <div className="circle"></div>
+                            {post.likersid && post.likersid.includes(userId) ? <FontAwesomeIcon icon={faHeartFull} className='redHeart'/> : <FontAwesomeIcon icon={faHeart} className='heart'/>}
+                            </div>
+                            <div className="dislike"
+                            type="submit" onClick={
+                                (e) =>
+                                handleLike(e, post.id, false, post.dislikersid)}>
                                 {post.dislikes}
-                                <div className="usersDisliked">{post.usersdisliked}</div>
+                                <div className="circle"></div>
+                                {post.dislikersid && post.dislikersid.includes(userId) ? <FontAwesomeIcon icon={faThumbsDown} className='redHeart'/> : <FontAwesomeIcon icon={faThumbsDownEmpty} className='heart'/>}
+                            </div>
+                            <Link to={`/modify/${post.id}`}>
+                            <button className="postPageButton" type="submit" >
+                                {viewPortWidth > 1024 ?  <p>Modify</p>  :<FontAwesomeIcon icon={faEdit} className='modifyIcon'/>}
                             </button>
-                        {/* </Link> */}
+                            </Link>
+                            <button onClick={(e) => handleDelete(e, post.author_id, post.id)} className="postPageButton" type="submit" >
+                                {viewPortWidth > 1024 ? <p>Delete</p> : <FontAwesomeIcon icon={faTrash} className='trashIcon'/> }
+                            </button>
+                        </div>
+                    </>
+                    <div className="postComments">
+                        <h2>Comments</h2>
+                        <Comments
+                            post = {post}
+                        
+                        />
                     </div>
-                    <div className="postInteractions">
-                            <h2>Comments</h2>
-                            <Comments
-                                post = {post}
-                            />
-                    </div>
-                </>
-            </article>
+                    
+                </article>
             }
             {!post &&
             <article className="post">

@@ -3,142 +3,256 @@
 //Import minireset from link to reset all default browser styles.
 @import url('https://cdn.rawgit.com/jgthms/minireset.css/master/minireset.min.css');
 
-//Make use of the classeName is AuthPage.js to style the login page.
-
-//Background color should be the same as the background color in settings.scss.
-//Body should countain two divs, one for the login form and one for the background image. Those divs should be styled as follows:
-//The login form div should have a width of 50% and a height of 100%.
-//The background image div should have a width of 50% and a height of 100%. The background image should be set to cover the entire div.
-//Background color should be a deep blue, with a light blue gradient, and strikes of red on the right side.
-
 input, textarea, button {font-family: inherit}
-
-
-.auth-body {
-  //Background color should be a gradient ranging from blue to red, with purple in the middle.
-  font-family: $default-font;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+* {font-family: $default-font;}
+html, body {
   height: 100vh;
-  width: 100vw;
-  background-color: white;
-
 }
+//Mobile first
 
-.auth-img-container{
-  width: 50%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-image: linear-gradient(to right, $gradient-start-color, $gradient-end-color);
-
-}
-
-.white_logo_only{
-  height: 50vmin;
-  width: 50vmin;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-//Use a system of child of to make the auth-carrousel-container childs rotate together.
-//They display should be set to none by default, and the first child should be set to display: block.
-
-
-.auth-form-container{
-  //Inner div should be placed at the right side of the parent div.
-  //Inner div should have a width of 50% and a height of 100%.
-  width: 50%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 0 2rem 0 2rem;
-  justify-content: center;
-  align-items: center;
-
-}
-
-.auth-card-header{
-  height: 50%;
-  font-weight: 700;
-  font-size: 1.2rem;
-}
-.auth-title{
-  //auth-title should be placed at the top of the parent div and not care about the width of the parent div.
-  //It should not prevent access to the login form though.
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-  font-weight: 700;
-  font-size: 3rem;
-}
-.auth-subtitle{
-  //auth-subtitle should be placed at the top of the parent div and not care about the width of the parent div.
-  //It should not prevent access to the login form though.
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-  font-weight: 700;
-  font-size: 1.5rem;
-}
-.auth-card{
-  //All elements should be aligned vertically, with a margin of 2rem.
-  //The card should have a width of 30rem and a height of 40rem.
-  //The card should have a border-radius of 1rem.
-  height: 50%;
-  width: 50%;
-  font-size: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.auth-logo{
-  /*the logo will be small, and placed under the header, but also just above the sign up and login buttons*/
-  height: 5vmin;
-  width: 5vmin;
-  margin-top: 3rem;
-  margin-bottom: 1.5rem;
-}
-
-.auth-form-control{
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  font-size: 1rem;
-  input{
-  //make sure each div named auth-form-control additionned to the form has a width of 100%.
-  padding-left: 1rem;
-  border-radius: 2rem;
-  padding: 0.5rem;
-  margin: 1rem;
-  width: 20rem;
+@media (max-width: 1024px) {
+  
+  body{
+    display: flex;
+    flex-direction: column;
+  }
+  .auth-body {
+    min-height: 80vh;
+    font-family: $default-font;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .auth-img-container{
+    display: none;
+  }
+  .auth-form-container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0 2rem 0 2rem;
+    align-items: center;
 
   }
-}
-//Apply style to .auth-form-container button.
-//Add animation to button when hovered and when clicked.
-.auth-form-actions button{
-  color: #61dafb;
-  background-color: white;
-  border: 1px solid #61dafb;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 5px;
-  font-size: 1.5vmin;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  &:hover{
-    background-color: #61dafb;
-    color: #282c34;
+  .auth-card-header{
+    height: 50%;
+    font-weight: 700;
+    font-size: 1.2rem;
+    img{ //same as .auth-logo
+      margin-top: 1rem;
+      height: 50px;
+      width: 50px;
+    }
   }
-  &:active{
-    transform: scale(0.95);
+  .auth-title{
+    padding-top: 2rem;
+    font-weight: 700;
+    font-size: 2.5rem;
+  }
+  .auth-subtitle{
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    font-weight: 700;
+    font-size: 1.5rem;
+  }
+  .auth-card{
+    height: 50%;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .auth-form-control{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    font-size: 1rem;
+    input{
+    padding-left: 1rem;
+    border-radius: 2rem;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    width: 20rem;
+    }
+  }
+  .auth-form-actions{
+    margin-top: 2rem;
+    button{
+      color: #48c2e3;
+      background-color: white;
+      border: 1px solid #48c2e3;
+      border-radius: 5px;
+      padding: 7px;
+      margin: 5px;
+      font-size: 2.5vmin;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      &:hover{
+        background-color: #48c2e3;
+        color: #282c34;
+      }
+      &:active{
+        transform: scale(0.95);
+      }
+    }
   }
 
+  .auth-footer{
+    //auth-footer should be placed at the bottom of the parent div and not care about the width of the parent div.
+    //It should not prevent access to the login form though.
+    padding-top: 2rem;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .auth-footer-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+  .auth-footer-left{
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .auth-footer-right{
+    a {
+      font-style: bold;
+      color:black;
+      text-decoration: none;
+    }
+  }
+  .auth-footer-fading-background{
+    background-image: linear-gradient(to top, $gradient-start-color, $gradient-end-color);
+    margin-top: 1rem;
+    height: 20vh;
+    width: 100%;
+  }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Desktop view.
+@media (min-width: 1024px) {
+
+  .auth-body {
+    //Background color should be a gradient ranging from blue to red, with purple in the middle.
+    font-family: $default-font;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  .auth-img-container{
+    width: 50%;
+    min-height: 100vh;
+    background-image: linear-gradient(to right, $gradient-start-color, rgb(255, 168, 168), $gradient-end-color);
+    background-size: cover;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+  }
+
+  .white_logo_only{
+    height: calc(20px + 40vmin);
+    width: calc(20px + 40vmin);
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .auth-form-container{
+    width: 50%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: auto;     //Center on y-axis
+
+  }
+
+  .auth-card-header{
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+  .auth-title{
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    padding-right: 1rem;
+    margin-left: 2rem;
+
+    font-weight: 700;
+    font-size: 3rem;
+  }
+  .auth-subtitle{
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    margin-left: 2.3rem;
+
+    font-weight: 700;
+    font-size: 1.5rem;
+  }
+
+  .auth-form-control{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    font-size: 1rem;
+    input{
+    padding-left: 1rem;
+    border-radius: 2rem;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    width: 20rem;
+    }
+  }
+  .auth-form-actions{
+    margin-top: 2rem;
+    button{
+      color: #52daff;
+      background-color: white;
+      border: 1px solid #52daff;
+      border-radius: 5px;
+      padding: 5px;
+      margin: 5px;
+      font-size: calc(12px + 1vmin); //calc allow us to have a minimum font size of 12PX.
+      min-height: 1vmin;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      &:hover{
+        background-color: #52daff;
+        color: #282c34;
+      }
+      &:active{
+        transform: scale(0.95);
+      }
+    }
+  }
+  .auth-logo{
+    height: calc(3rem + 2vmin);
+    width: calc(3rem + 2vmin);
+    margin-bottom: 2.5rem;
+    margin-left: 1rem;
+  }
+
+  .auth-footer{
+    display: flex;
+    margin-top: -0.1rem;
+    font-weight: 700;
+    font-size: 0.8rem;
+    background-image: linear-gradient(to right, $gradient-start-color, rgb(255, 168, 168), $gradient-end-color, $gradient-end-color, $gradient-end-color);
+    p, a {
+      text-decoration: none;
+      color: white;
+      font-weight: 700;
+    }
+    padding-bottom: 1rem;
+    padding-left: 1rem;
+    padding-top: 1rem;
+  }
+}

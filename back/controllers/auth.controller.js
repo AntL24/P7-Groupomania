@@ -2,11 +2,9 @@ require("dotenv").config();
 
 const bcrypt = require("bcryptjs");
 const client = require("../pgsql_db");
-// Change to pool ? Client ? To see if it limits the duplicates console.log()
+    //When the app will be deployed, we will need to use pool.query instead of client.query.
+    //This is because we will have multiple users, and we will need to use the pool to handle the requests.
 const jwt = require ("jsonwebtoken");
-
-// pool.query vs client.query difference ?
-// 
 
 ///////////////////
 //Signup function//
@@ -62,112 +60,3 @@ function passwordHasher(password) {
 }
 
 module.exports = {saveNewUser, loginUser};
-
-
-
-
-
-
-
-
-//////////////////////////////////////
-
-//Registration
-/*
-exports.register = async(req, res) => {
-    const {name, email, password} = req.body;
-    try{
-        const data = await client.query(`SELECT * FROM users WHERE email=$1;`, [email])
-        const arr = data.rows;
-        if (arr.length != 0) {
-        return res.status(400).json({
-            error : "Email already exist, no need to register again. Please login.",
-        });
-        }
-        else {
-            bcrypt.hash(password, 10, (err, hash) => {
-                if (err)
-                res.status(err).json({
-                    error: "Server error",
-                });
-                const user = {
-                    name,
-                    email,
-                    password: hash,
-                };
-                var flag = 1; //Declaring a flag
-                //flag which will act as boolean for the following section
-                //inserting data into psql DB
-                client.query(`INSERT INTO users (name, email, password) VALUES ($1,$2,$3);`, [user.name, user.email, user.password], (err) => {
-                    if (err) {
-                        flag = 0;//If user is not inserted to database, assigning 0/false to flag.
-                        console.error(err);
-                        return res.status(500).json({
-                            error: "Database error"
-                        })
-                    }
-                    else {
-                        flag = 1;
-                        res.status(200).send({message: "User added to database, not verified"});
-                    }
-                })
-                if (flag){
-                    const token = jwt.sign(
-                        {email: user.email}, process.env.SECRET_KEY
-                    )
-                }
-            })
-        }
-    }
-    catch (err){
-        console.log(err);
-        res.status(500).json({
-            error:"Database error while registering",
-        })
-    }
-}
-
-//Login function
-exports.login = async (req, res) => {
-    const {email, password } = req.body;
-try{
-    const data = await client.query(`SELECT * FROM users WHERE email=$1;`, [email]) //Checking existence of user in db
-    const user = data.rows;
-    if (user.length === 0) {
-        res.status(400).json({
-            error: "User is unknown, please sign up first.",
-        });
-    }
-    else{
-        bcrypt.compare(password, user[0].password), (err, result) =>{
-            if (err) {
-                res.status(500).json({
-                    error: "Server error",
-                });
-            } else if (result === true) {
-                const token = jwt.sign(
-                    {
-                        email: email,
-                    },
-                    process.env.SECRET_KEY
-                );
-                res.status(200).json({
-                    message: "User signed in.",
-                    token: token,
-                });
-            }
-            else{
-                if (result != true)
-                res.status(400).json({
-                    error:"Wrong password.",
-                });
-                }
-                }
-                }
-                } catch (err) {
-                console.log(err);
-                res.status(500).json({
-                error: "Database error occurred while signing in.", //Database connection error
-                });
-                };
-            }*/

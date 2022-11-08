@@ -6,6 +6,8 @@
 import React from 'react';
 // import useNavigate from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOut } from '@fortawesome/free-solid-svg-icons';
 
 
 function Logout () {
@@ -17,8 +19,12 @@ function Logout () {
     };
     
     return (
-        <div>
-            <button onClick={logout}>Logout</button>
+        <div className="navbarLogout">
+            <div onClick={logout}><FontAwesomeIcon icon={faSignOut}/>
+                <div className="navbarText">
+                    Logout
+                </div>
+            </div>
         </div>
     );
     }

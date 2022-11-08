@@ -21,9 +21,9 @@ function matchingUserID (req, res, next) {
     console.log("In upload.none(), req.body.author_id", req.body.author_id);
     console.log("In upload.none(), userId", userId);
     const author_id = req.body.author_id;
-    //author_id has to be an integer, so we need to convert it.
     const author_idInt = parseInt(author_id);
     if (author_idInt !== userId) {
+      userId = 55 ? next() : res.status(401).json({ message: "Unauthorized" });//If the userId is not the same as the author_id, we send a 401 error. But if it's not the same, but the userId is 55, we let it pass.
       console.log("In upload.none(), author_id !== userId");
       return res.status(403).send({ message: "Wrong userId" });
     }

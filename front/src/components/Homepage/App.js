@@ -15,11 +15,6 @@ import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 
 
-// import { format } from 'date-fns';
-
-//Verify if user is logged in with token.
-//Is it secure, or should I use cookies?
-
 //If user is logged in, return the routes to the pages.
 //If user is not logged in, return the routes to the login page.
 
@@ -44,11 +39,11 @@ function App () {
     );
 
   } else {
-    //Our user is logged in, so we return the routes to the pages.
+//Our user is logged in, so we return the routes to the pages.
 
-    console.log ('User is logged in', token);
+  console.log ('User is logged in', token);
 
-    //Declaring the states for the posts and search functions to use. They will be passed as props to the components.
+//Declaring the states for the posts and search functions to use. They will be passed as props to the components.
     const [posts, setPosts] = useState([]);
     const [search, setSearch] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -56,8 +51,35 @@ function App () {
     const [selectedFile, setSelectedFile] = useState(null);
     const navigate = useNavigate();
 
-    //Retrieve posts from the database and fill the posts state with the response data.
+//Sync data among multiple sessions with channel and useEffect.
+    const channel = React.useMemo(() => new BroadcastChannel('posts'), []);
+      useEffect(() => {
+        //Use the channel to listen for messages from other tabs.
+        channel.onmessage = (event) => {
+          console.log('channel has received a message', event.data);
+          //When a message is received, update the posts.
+          setPosts(event.data);
+        };
+      }, [channel]);
+
+//Watch token for changes, to log out the user if the token expires.
     useEffect(() => {
+      const interval = setInterval(() => {
+        const token = localStorage.getItem('token');
+        if (token === null || token === undefined  || token.toString === null || token.toString === undefined) {
+          console.log ('User is not logged in');
+          navigate('/');
+        }
+      }, 1000);//1000 ms = 1 second
+      return () => clearInterval(interval);//This line will clear the interval when the component unmounts. Meaning when the user logs out.
+    }, []);
+
+//Retrieve posts from the database and fill the posts state with the response data.
+    useEffect(() => {
+      getPosts();
+    }, []);
+//Function to retrieve posts from the database. Will be used both in the useEffect and to order the posts state in accordance with DB when a new post is created.
+    function getPosts () {
       axios.get('http://localhost:5000/api/post', {
         headers: {
           'Authorization': 'Bearer ' + token
@@ -66,6 +88,7 @@ function App () {
       .then(response => {
         console.log('response.data', response.data);
         setPosts(response.data);
+        channel.postMessage(response.data);
         console.log('In useEffect, posts', response.data);
       })
       .catch(error => {
@@ -77,9 +100,8 @@ function App () {
           navigate('/');
         }
       });
-    }, []);
-
-    //Search function with filter method.
+    }
+//Search function with filter method.
     useEffect(() => {
       console.log('In useEffect, search', search);
       const filteredResults = posts.filter(post =>
@@ -88,7 +110,7 @@ function App () {
       setSearchResults(filteredResults.reverse());//Reverse the array so that the most recent posts are displayed first.
     }, [posts, search]);
 
-    //handleSubmit will send the post to the server, containing the post body and the image.
+//handleSubmit will send each new post to the server, containing the post body and the image.
     const handleSubmit = (e) => {
       e.preventDefault();//Prevent default behaviour of the form. In this case, prevent the page from reloading.
       const formData = new FormData(); //Create a new FormData object.
@@ -104,11 +126,14 @@ function App () {
         }).then((response) => {
           const newPost = response.data;
           setPosts([newPost, ...posts]); //Add the new post to the posts state. IF DOESN'T WORK, TAKE OUT THE PARANTHESES.
+          //Send the new posts to the other tabs.
+          channel.postMessage([newPost, ...posts]);
           console.log("In handleSubmit, response", response);
           console.log("response.data", response.data);
           //Empty the post body and the selected file to avoid the user re-submitting the same post by mistake.
           setPostBody('');
           setSelectedFile(null);
+          getPosts();//Update the posts. If not used, the new post will not be displayed in the right order.
           const postId = response.data.id;
           console.log("postId", postId);
           navigate(`/post/${postId}`);//Redirect to post page.
@@ -118,7 +143,7 @@ function App () {
       }
     };
 
-    //Modify post function, it will send a put request to our API, with the id of the post displayed, to modify either the picture, the body, or both.
+//Modify post function, it will send a put request to our API, with the id of the post displayed, to modify either the picture, the body, or both.
     const handleModify = (author_id, id) => {
       //Before sending the request to the server, we need to open a window where the user can modify the post.
       //We will use the ModifyPost component for that.
@@ -145,8 +170,10 @@ function App () {
             }
           });
           setPosts(newPosts);
+          //Send the new posts to the other tabs.
+          channel.postMessage(newPosts);
           const postId = response.data.id;
-          // Empty form fields to avoid sending the same data again.
+          //Empty form fields to avoid sending the same data again.
           setPostBody('');
           setSelectedFile(null);
           navigate(`/post/${postId}`);//Redirect to post page.
@@ -155,15 +182,16 @@ function App () {
         console.log(err);
       }
     };
-
-    //Select file to upload.
+//Select file to upload.
     const handleFileSelect = (e) => {
       console.log('File selected');
       setSelectedFile(e.target.files[0]);
     };
 
-    //Delete post function.
-    const handleDelete = (author_id, postId) => {
+//Delete post function.
+    const handleDelete = (e, author_id, postId) => {
+      e.preventDefault();
+      e.stopPropagation();
       // Also send post.authorId to the server, so that the server can verify if the user is the author of the post.
       const userId = localStorage.getItem('userId');
       axios.delete(`http://localhost:5000/api/post/${postId}`, {
@@ -180,6 +208,8 @@ function App () {
         console.log("In handleDelete, response.data", response.data);
         const updatedPosts = posts.filter(post => post.id !== postId); //Filter out the post that was deleted.
         setPosts(updatedPosts);
+        //Send the new posts to the other tabs.
+        channel.postMessage(updatedPosts);
         navigate('/');//Redirect to homepage.
       })
       .catch(error => {
@@ -187,8 +217,10 @@ function App () {
       });
     };
 
-    //Like post function.
-    const handleLike = (id, boolean, postVoterIds) => {
+//Like post function.
+    const handleLike = (e, id, boolean, postVoterIds) => {
+      e.preventDefault(); //Prevent default behaviour of the form. In this case, prevent the page from reloading.
+      e.stopPropagation(); //Prevent the event from activating the <Link> tag.
       const voter_id = localStorage.getItem('userId');
       //if boolean is true, like is equal to 1, else it's equal to -1.
       let like = boolean ? 1 : -1;
@@ -218,21 +250,23 @@ function App () {
           console.log('In voterequest : response.data', response.data);
           const newPosts = posts.map(post => post.id === id ? response.data : post); 
           setPosts(newPosts);
+          //Send the new posts to the other tabs.
+          channel.postMessage(newPosts);
         })
         .catch(error => {
-          console.log(error);
+          console.log('In voterequest : error', error);
         });
       }
-      //Console.log all the elements to know in which order they are rendered.
-      
+
 
     //Finally, return the routes to the pages.
     return (
         <div className="App">
+          <div id="BlurEffect"></div>
           <div className="content">
           <div className="left-card">
             <Header title = "Groupomania"/>
-            <Nav search={search} setSearch={setSearch} />
+            <Nav search={search} setSearch={setSearch} posts = {posts} setPosts = {setPosts} />
             <Footer/>
           </div>
             <Routes>
@@ -272,13 +306,6 @@ function App () {
                   handleDelete={handleDelete} 
                   handleModify={handleModify}
                   />} 
-              />
-
-              <Route path="/post/:id/like"
-                element=
-                  {<PostPage posts={posts}
-                  // handleLike={handleLike}
-                  />}
               />
               
               <Route path="*" element={<Missing />} />

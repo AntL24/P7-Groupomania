@@ -1,249 +1,348 @@
 // //Apply similar style to auth.scss
 // @import url('https://cdn.rawgit.com/jgthms/minireset.css/master/minireset.min.css');
 @import 'settings.scss';
-
-
-.App{
-    //Should be in row
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    width: 100vw;
-    
-    .content{
-        //The nav bar should be placed on the left side of the screen, and the content should be placed on the right side of the screen.
-        display: flex;
-        flex-direction: row;
-        // justify-content: space-between;
-        align-items: center;
-        height: 100%;
-        // width: 100vw;
-        background-color: white;
-
-        font-family: $default-font;
+//On hover of .navbarLogout, change the cursor to pointer
+.navbarLogout{
+    padding-left: 1rem;
+    margin-top: 1rem;
+    &:hover {
+    cursor: pointer;
     }
+}
+.voted{
+    color: #d35b5b;
+}
 
-    //postImage classname will display an image in the post.
-    //It should be a small image, so it will be displayed in the left side of the className post.
-    //postBody will be the main content of the post, at the right side of the postImage.
-    .left-card{
+
+@media (min-width: 1024px){
+    .logo {
+        width: 25vmin;
+    }
+}
+    .navbarLogout{
+        div{
+         display: flex;
+         //Add space between the child elements of the div
+         > * {
+           margin-right: 0.5rem;
+         }
+        }
+     }
+    .App{
+        //Should be in row
         display: flex;
         flex-direction: column;
-        align-items: center;
-        height: 100%;
-        width: 20%;
-        background-color: white;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 1.5rem;
-        line-height: 1.5rem;
-        color: black;
-        padding: 0 2rem 0 2rem;
-        margin-right: 2rem;
-        box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
-        header.Header{
+        // background-color: #d35b5b;
+        .content{
+            //The nav bar should be placed on the left side of the screen, and the content should be placed on the right side of the screen.
             display: flex;
-            height: 15%;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            font-family: $default-font;
         }
-        footer{
-            display: flex;
-            height: 15%;
-        }
-        .logo {
-            height: 5vmin;
-            width: 5vmin;
-        }
-        .Nav{
+        .left-card{
+            //Fixed on the left side of the screen.
+            position: fixed;
+            top: 0;
+            left: 0;
             display: flex;
             flex-direction: column;
-            justify-content: space-around;
-            height: 70%;
-
-            .searchForm{
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 20%;
+            background-color: white;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 1.5rem;
+            line-height: 1.5rem;
+            color: black;
+            padding: 0 2rem 0 2rem;
+            box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
+            header.Header{
                 display: flex;
-                flex-direction: column;
-                justify-content: space-between;
+                flex-direction: row;
+                justify-content: space-around;
                 align-items: center;
-                margin-top: 2rem;
-                margin-bottom: 2rem;
-                height: 10vh;
+                font-size: 3rem;
             }
-            .navLinks{
+            footer{
+                position: fixed;
+                bottom: 0;
+                font-size: 1rem;
+                display: flex;
+            }
+            .Nav{
                 display: flex;
                 flex-direction: column;
                 justify-content: space-around;
                 align-items: center;
-                height: 80vh;
-                width: 100%;
-                .navLink{
+                height: 80%;    
+                .searchForm{
                     display: flex;
-                    flex-direction: row;
-                    justify-content: space-between;
-                    align-items: center;
                     width: 100%;
-                    height: 5vh;
-                    margin-bottom: 1rem;
-                    .li{
-                        //Should have a transparent background that will change color when the user hovers over it.
-                        background-color: transparent;
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        flex-direction: row;
-                        justify-content: space-between;
-                        align-items: center;
-                        :hover{
-                            background-color: #F2F2F2;
-                        }
-                    }
-                    .navLinkText{
-                        font-style: normal;
-                        font-weight: bold;
-                        font-size: 1.5rem;
-                        line-height: 1.5rem;
-                        color: black;
-                    }
-                    .navLinkIcon{
-                        height: 2.5vmin;
-                        width: 2.5vmin;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    align-items: center;
+                    margin-top: 2rem;
+                    padding-left: 1rem;
+                    padding-right: 1rem;
+                    height: 10vh;
+                    input{
+                        border: none;
+                        text-overflow: ellipsis;
+                        height: 2rem;
                     }
                 }
-            }
-
+                .svg-inline--fa{
+                    color: black;
+                    margin-right: 0.5rem;
+                }
+                .navbarText{
+                    color: black;
+                }
+                .navLinks{
+                    a{
+                        text-decoration: none;
+                    }
+                    display: flex;
+                    flex-direction: column;
+                    justify-content:space-evenly;
+                    align-items: flex-start;
+                    height: 80vh;
+                    width: 20vw;
+                    .navLink{
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: center;
+                        align-items: center;
+                        padding-right: 1rem;
+                        padding-left: 1rem;
+                        height: 7vh;
+                        margin-bottom: 1rem;
+                        &:hover{ //Without &, it would apply to all the children of navLink
+                            background-color: #ffd1d137;
+                            border-radius: 2rem;
+                        }
+                    }
+                }
+            }      
         }
-            
-    }
-    .Home{
-        display: flex;
-        flex-direction: column;
-        .post {
-            max-height: 30%;
-            background-color: white;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            padding: 10px;
-            box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
-            .postImage {
-                width: 30%;
-                height: 100%;
-                border-radius: 10px;
-                .img {
-                    width: 100%;
-                    height: 100%;
+//////////////////////////////////////////
+        .Home{
+            //Position absolute to be able to place the post on the right side of the screen without hindering the scrolling.
+            position: absolute;
+            top: 0;
+            right: 1%;
+            z-index: 15;
+            display: flex;
+            flex-direction: column;
+            width: 75%;
+            height: 100%;
+        
+            .post{
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: left;
+                border: 2px solid #e6ecf0;
+                border-radius: 5px;
+                padding: 0.5rem;
+                margin-bottom: 0.5rem; 
+                word-wrap: break-word;
+            }
+            .postContent{
+                padding-left: 1rem;
+                padding-right: 1rem; 
+                min-height: 3rem;
+                display: flex;
+                flex-direction: column;
+                img{
+                    max-width: 40%;
                     border-radius: 10px;
                 }
             }
-            .postBody {
-                width: 70%;
-                height: 100%;
+        .redHeart{
+            color: #d35b5b;
+        }
+        .redThumb{
+            color: #d35b5b;
+        }
+            .postBody{
+                margin-top: 2rem;
+            }
+            .postInteractions{
+                display: inline-flex;
+                padding-top: 1rem;
+            }
+            .AuthorNameAndDate{
                 display: flex;
-                // flex-direction: column;
-                // justify-content: space-between;
-                // align-items: flex-start;
-                padding: 10px;
+                width: 100%;
+                p{
+                    padding-left: 0.5rem;
+                    min-width: fit-content;
+                    overflow: ellipsis;
+                }
+            }
+            .heart, .redHeart{
+                margin-left: 0.5rem;
+            }
+            .fa-user{
+                padding-right: 0.5rem;
+    
+            }
+            .voted{
+                 color: #d35b5b;
+            }
+            // Both like and dislike, on hover, change color
+            .like, .dislike{
+                //Center content
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                // Circle background
+                border-radius: 50%;
+                width: 1rem;
+                height: 1rem;
+                padding: 1.5rem;
+                &:hover{
+                    color: #d35b5b;
+                }
+                //When the user clicks on the like or dislike button, the animation should do a full cycle.
+                &:active{
+                    .circle{
+                        opacity: 1;
+                        animation: scaleInAndOut 0.15s forwards cubic-bezier(.36, .11, .89, .32);
+                    }
+            }
+            .circle{
+                border-radius: 50%;
+                background-color: rgba(255, 100, 100, 0.575);
+                width: 30px;
+                height: 30px;
+                position: absolute;
+                opacity: 0;
+            }   
+        }
+            //Style the button to be round, and have a modern look
+            button{
+                border-radius: 1rem;
+                border: none;
+                background-color: #1da1f2;
+                color: white;
+                padding: 0.5rem;
+                margin: 0.5rem;
+                &:hover{
+                    cursor: pointer;
+                    background-color: #1a91da;
+                }
+            }
+            //On hover of any of the post components, change the background color
+            .post:hover{
+                background-color: rgba(240, 240, 240, 0.5);
             }
         }
     }
-}
-
-.PostPage{
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    width: 80%;
-    background-color: white;
-    font-style: normal;
-    font-size: 12px;
-    line-height: 1.5rem;
-    color: black;
-    padding: 2rem;
-    margin-right: 2rem;
-    box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
-    border-radius: 10px;
-    h2{
-        font-style: normal;
-        font-weight: bold;
-        font-size: 1.5rem;
-        line-height: 1.5rem;
-        color: black;
-        margin-bottom: 1rem;
-    }
-
-    .post{
-    //Make sure post doesn't overflow its container
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: baseline;
-    height: 10%;
-    width: 100%;
-    background-color: white;
 
 
-        img{
-            max-width: 10rem;
+    
+@media (max-width: 1024px){
+    .App{
+        .content{
+            .left-card{
+                //Fixed on the left side of the screen.
+                position: fixed;
+                top: 0;
+                left: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                width: 20%;
+                background-color: white;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 1.5rem;
+                line-height: 1.5rem;
+                color: black;
+                padding: 0 2rem 0 2rem;
+                box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
+                footer{
+                    font-size: 0.5rem;
+                    display: flex;
+                    flex-direction: column;
+                }
+            }
         }
     }
-}
-
-.NewPost{
-    .post{
-        img{
-            max-width: 10rem;
-        }
+    .App .left-card .Nav .navLinks{
+        display: flex;
+        flex-direction: column;
+        justify-content:space-evenly;
+        align-items: center;
     }
-}
-
-.postContentModify{
-    box-shadow: 0 0 10px 0 rgba(0,0,0,0.2);
-    border-radius: 10px;
-    padding: 0.5rem;
-    margin: 1rem;
-}
-
-.modifyForm{
-    display: flex;
-    flex-direction: column;
-    //Child elements should take full width of the parent element
-    width: 50%;
-    //Center content
-    align-items: right;
-    margin: 1rem;
-    //There should be a space between the child elements
-    > * {
-        margin-bottom: 0.3rem;
+    .logo {
+        width: 8vmin;
+        max-width: none;
     }
-    //body text area should adapt to the size of the text
-    textarea{
-        padding: 0.5rem;
-        text-align: justify;
-        min-height: 5rem;
+    #BlurEffect{
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
         width: 100%;
-
+        height: 100%;
+        z-index: 0;
+        background-color: rgb(255, 255, 255);
+        opacity: 0.6;
     }
-}
-.modifyButton{
-    margin: 1rem;
-}
-
-.viewMoreReplies{
-    // Button to display all replies to a comment
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: center;
-    width: 100%;
-    height: 2rem;
-    margin-bottom: 1rem;
-   
-        background-color: transparent;
-        border: none;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 1rem;
-        line-height: 1rem;
-        color: #000000;
-        :hover{
-            color: #F2F2F2;
+    .searchForm{
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        height: 2rem;  
+        input{
+            width: 100%;
+            // border: 1px solid #1b3242;
+            background-color: transparent;
+            margin: 2px;
+            padding: 0px;
+            text-overflow: ellipsis;
+        }
+    }
+    .navbarText{
+        font-size: 0px;
+    }
+    .App{
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        width: 100%;
+    }
+    .content{ //home feed
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .svg-inline--fa{//Delete and edit icons
+        width: 1rem;
+    }
+    .App{
+        .left-card{
+            .Nav{
+                .svg-inline--fa{//Navlinks icons
+                    color: black;
+                    margin-right: 0rem;
+                    width: 1.5rem;
+                }
+            }
+        }
     }
 }

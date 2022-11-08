@@ -1,12 +1,10 @@
-//ModifyPost component is used to modify a post.
-//It is a child of App component.
-//It will be rendered when the user clicks on the "Modify" button on the PostPage component.
-
-//Id of the post to modify was passed as a parameter.
-//We need to get it from the url.
-//We will use the useParams hook from react-router-dom.
+//Id of the post to modify was passed as a parameter. //We need to get it from the url using the useParams hook from react-router-dom.
 import { useParams, Link } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+//Get file select icon
+import { faFileImage } from '@fortawesome/free-solid-svg-icons';
+const fileSelectIcon = <FontAwesomeIcon icon={faFileImage} />
 
     const ModifiedPost = ({posts, postBody, setPostBody, handleFileSelect, handleModify}) => {
     const { id } = useParams();
@@ -20,7 +18,6 @@ import TextareaAutosize from 'react-textarea-autosize';
                     <h2>Post to update:</h2>
                     <article className="post">
                         <div className="postContentModify">
-                            <p className="postDate">{post.datetime}</p>
                             <p className="postBody">{post.body}</p>
                             {post.shared_picture && <img className="postImage" src={post.shared_picture} alt = "post illustration" />}
                         </div>
@@ -28,27 +25,28 @@ import TextareaAutosize from 'react-textarea-autosize';
                             e.preventDefault();
                             handleModify(post.author_id, post.id);
                         }}>
-                            <label htmlFor="body">Modifier le texte</label>
+                            <label htmlFor="body" className="modifyLabel">Modify your post:</label>
                             <TextareaAutosize 
                                 placeholder='Modifier le texte'
-                                id="body"
-                                name="body"
+                                id="newPostBody"
+                                className="newPostBody"
                                 value={postBody}
                                 onChange={(e) => setPostBody(e.target.value)}
                             />
-                            <label htmlFor="image">Modifier l'image</label>
+                            <label htmlFor="handleFileSelect" className="imageLabel">
+                                {fileSelectIcon} Select file
+                            </label>
                             <input
                                 type="file"
-                                id="image"
+                                id="handleFileSelect"
                                 name="image"
-                                accept="image/png, image/jpeg"
                                 onChange={handleFileSelect}
                             />
-                            <button type="submit">Modifier</button>
+                            <button className="modifyButton" type="submit">Send modifications</button>
                         </form>
                         <Link to={`/post/${post.id}`}>
-                            <button className="modifyButton" type="submit" >
-                                Retour au post
+                            <button className="returnButton" type="submit" >
+                                Go back to post
                             </button>
                         </Link>
                     </article>
