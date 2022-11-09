@@ -48,7 +48,6 @@ const Comments = ({ }) => {
 //API call for replies
     const getReplies = useCallback(async (rootId) => {
         try {
-            console.log("In getReplies", rootId);
             const response = await axios.get(`http://localhost:5000/api/post/${id}/comments/rootComments/${rootId}/?page=${repliesPage.get(rootId)}`, { //repliesPage.get(rootId) is the page number for the rootId
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -56,7 +55,6 @@ const Comments = ({ }) => {
             });
             //If the response is empty, it means there are no more replies to load
             if (response.data.length === 0) {
-                console.log("No more replies to load");
                 setRepliesHasMore(repliesHasMore.set(rootId, false));
                 return;
             }
@@ -130,7 +128,6 @@ const Comments = ({ }) => {
         });
     }, [getReplies]);
 
-    console.log("root comments: ", rootComments, "replies: ", replies);
     
     function setChildrenArray(comment, replies) {
         //Add an array of children to each comment

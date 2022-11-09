@@ -1,5 +1,5 @@
 const express = require('express');
-const {deleteOutdatedLocalPicture, handleFilesBeforeModify, sendPosts, makePost, sendPostCorrespondingToId, deletePost, modifyPost, likePost, createComment, deleteComment, modifyComment, getAllComments, getCommentsByPostId, consoleLogTest, getRootCommentsByPostId, getChildCommentsByRootCommentId}= require("../controllers/posts.controller");
+const {deleteOutdatedLocalPicture, handleFilesBeforeModify, sendPosts, makePost, sendPostCorrespondingToId, deletePost, modifyPost, likePost, createComment, deleteComment, modifyComment, getAllComments, getCommentsByPostId, getRootCommentsByPostId, getChildCommentsByRootCommentId}= require("../controllers/posts.controller");
 const {authenticateUser} = require("../middleware/tokenAuth");//authenticateUser will verify user informations (header, password, token)
 const {matchingUserID} = require("../middleware/matchingUserID");
 const {upload} = require('../middleware/multer');

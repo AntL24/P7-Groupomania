@@ -80,10 +80,10 @@ const Post = ({ post, handleLike, handleDelete }) => {
                     {viewPortWidth > 1024 ?  <p>Modify</p>  :<FontAwesomeIcon icon={faEdit} className='modifyIcon'/>}
                     </button>
                 </Link>
-                    <button onClick={(e) => handleDelete(e, post.author_id, post.id)} className="deleteButton" type="submit" >
-                        {viewPortWidth > 1024 ? <p>Delete</p> : <FontAwesomeIcon icon={faTrash} className='trashIcon'/> }
-                    </button>
-                </div>
+                <button onClick={(e) => handleDelete(e, post.author_id, post.id)} className="deleteButton" type="submit" >
+                    {viewPortWidth > 1024 ? <p>Delete</p> : <FontAwesomeIcon icon={faTrash} className='trashIcon'/> }
+                </button>
+            </div>
         </article>
     );
 };

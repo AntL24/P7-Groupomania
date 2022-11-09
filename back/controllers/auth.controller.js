@@ -13,14 +13,12 @@ async function saveNewUser(req, res) {
     try {
     const { email, password, name_surname} = req.body;
     const hashedPassword = await passwordHasher(password);//Storing user information with a hashed password.
-    console.log(hashedPassword, email, password, name_surname);
     await client.query(`INSERT INTO users (email, password, name_surname) VALUES ('${email}', '${hashedPassword}', '${name_surname}')`);
     res.status(201).send({message: "User created"});
     } catch (err) {
         if (err.code === "23505") {
             return res.status(401).send({message: "User already exists"});
         }   
-        console.log(err);
         res.status(409).send({message: "Error creating user: " + err})
     }
 }

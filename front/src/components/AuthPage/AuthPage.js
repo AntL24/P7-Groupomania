@@ -68,7 +68,6 @@ const AuthPage = () => {
         localStorage.setItem("userId", response.data.userId);
         window.location.reload();
       } catch (err) {
-        console.log(err);
         setError(err.response.data.message);
       }
     } else {
@@ -93,7 +92,6 @@ const AuthPage = () => {
             password: password,
           }
         );
-        console.log(response);
         if (response.status !== 200 && response.status !== 201) {
           throw new Error("Failed!");
         }

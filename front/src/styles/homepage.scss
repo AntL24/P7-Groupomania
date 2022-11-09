@@ -12,6 +12,11 @@
 .voted{
     color: #d35b5b;
 }
+.postInteractions{
+    &:hover {
+    cursor: pointer;
+    }
+}
 
 
 @media (min-width: 1024px){
@@ -32,7 +37,6 @@
         //Should be in row
         display: flex;
         flex-direction: column;
-        // background-color: #d35b5b;
         .content{
             //The nav bar should be placed on the left side of the screen, and the content should be placed on the right side of the screen.
             display: flex;
@@ -308,7 +312,6 @@
         height: 2rem;  
         input{
             width: 100%;
-            // border: 1px solid #1b3242;
             background-color: transparent;
             margin: 2px;
             padding: 0px;

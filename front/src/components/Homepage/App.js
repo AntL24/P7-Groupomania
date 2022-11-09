@@ -29,7 +29,6 @@ function App () {
 
   if (token === null || token === undefined  || token.toString === null || token.toString === undefined) {
     //User is not logged in. Return the login page.
-    console.log ('User is not logged in');
     return (     
         <Routes>
           <Route path="/" element={<AuthPage />} />
@@ -40,8 +39,6 @@ function App () {
 
   } else {
 //Our user is logged in, so we return the routes to the pages.
-
-  console.log ('User is logged in', token);
 
 //Declaring the states for the posts and search functions to use. They will be passed as props to the components.
     const [posts, setPosts] = useState([]);
@@ -56,7 +53,6 @@ function App () {
       useEffect(() => {
         //Use the channel to listen for messages from other tabs.
         channel.onmessage = (event) => {
-          console.log('channel has received a message', event.data);
           //When a message is received, update the posts.
           setPosts(event.data);
         };
@@ -67,7 +63,6 @@ function App () {
       const interval = setInterval(() => {
         const token = localStorage.getItem('token');
         if (token === null || token === undefined  || token.toString === null || token.toString === undefined) {
-          console.log ('User is not logged in');
           navigate('/');
         }
       }, 1000);//1000 ms = 1 second
@@ -86,13 +81,10 @@ function App () {
         }
       })
       .then(response => {
-        console.log('response.data', response.data);
         setPosts(response.data);
         channel.postMessage(response.data);
-        console.log('In useEffect, posts', response.data);
       })
       .catch(error => {
-        console.log('Error retrieving posts', error, 'error.response', error.response);
         //If axios error is 403, the token is invalid. Remove the token and userId from local storage and redirect to login page.
         if (error.response.status === 403) {
           localStorage.removeItem('token');
@@ -103,7 +95,6 @@ function App () {
     }
 //Search function with filter method.
     useEffect(() => {
-      console.log('In useEffect, search', search);
       const filteredResults = posts.filter(post =>
         ((post.body).toLowerCase()).includes(search.toLowerCase()) //toLowerCase() is used to make the search case insensitive (i.e. "Hello" and "hello" will both be found).
         );
@@ -116,7 +107,6 @@ function App () {
       const formData = new FormData(); //Create a new FormData object.
         formData.append("image", selectedFile);
         formData.append("body", postBody);
-        console.log(formData);
       try {
         axios.post('http://localhost:5000/api/post', formData, {
           headers: {
@@ -128,14 +118,11 @@ function App () {
           setPosts([newPost, ...posts]); //Add the new post to the posts state. IF DOESN'T WORK, TAKE OUT THE PARANTHESES.
           //Send the new posts to the other tabs.
           channel.postMessage([newPost, ...posts]);
-          console.log("In handleSubmit, response", response);
-          console.log("response.data", response.data);
           //Empty the post body and the selected file to avoid the user re-submitting the same post by mistake.
           setPostBody('');
           setSelectedFile(null);
           getPosts();//Update the posts. If not used, the new post will not be displayed in the right order.
           const postId = response.data.id;
-          console.log("postId", postId);
           navigate(`/post/${postId}`);//Redirect to post page.
         });
       } catch (err) {
@@ -147,19 +134,16 @@ function App () {
     const handleModify = (author_id, id) => {
       //Before sending the request to the server, we need to open a window where the user can modify the post.
       //We will use the ModifyPost component for that.
-      console.log("In handleModify, author_id", author_id);
       const formData = new FormData();
       formData.append("image", selectedFile);
       formData.append("body", postBody);
       formData.append("author_id", author_id);
       formData.append("user_id", localStorage.getItem('userId'));
-      console.log("In handleModify, formData user_id and author_id", formData.get('user_id'), formData.get('author_id'));
       try {
         axios.put(`http://localhost:5000/api/post/${id}`, formData, {
           headers: { 'Content-Type': 'multipart/form-data', 'Authorization': `Bearer ${token}` }
         }).then((response) => {
           setSelectedFile(null);//Empty the selectedFile to prevent the same image from being sent again.
-          console.log("In handleModify, response", response);
           //Change the post in the posts state to the modified post.
           const modifiedPost = response.data;
           const newPosts = posts.map(post => {
@@ -204,8 +188,6 @@ function App () {
         }
       })
       .then(response => {
-        console.log("In handleDelete, postId", postId);
-        console.log("In handleDelete, response.data", response.data);
         const updatedPosts = posts.filter(post => post.id !== postId); //Filter out the post that was deleted.
         setPosts(updatedPosts);
         //Send the new posts to the other tabs.
@@ -224,20 +206,17 @@ function App () {
       const voter_id = localStorage.getItem('userId');
       //if boolean is true, like is equal to 1, else it's equal to -1.
       let like = boolean ? 1 : -1;
-      console.log('button clicked, voteType is', like, ' id is', id, ' boolean is', boolean);
-      console.log('voter_id is', voter_id);
+
       //If the voter_id can be found in post.votersid, then like is equal to 0.
       //This is to prevent the user from liking a post twice.
       //Avoid cannot read property 'includes' of undefined error, or null.
       if (postVoterIds !== undefined && postVoterIds !== null && postVoterIds.includes(voter_id)) {
         like = 0;
       }
-      console.log('in handlelike, Like is', like);
       voteRequest(id, like, voter_id);
     };
     //Vote request function.      
       function voteRequest(id, like, voter_id) {
-        console.log('voteRequest called');
         axios.post(`http://localhost:5000/api/post/${id}/like`, {
           voter_id: voter_id,
           like: like
@@ -247,7 +226,6 @@ function App () {
           }
         })
         .then(response => {
-          console.log('In voterequest : response.data', response.data);
           const newPosts = posts.map(post => post.id === id ? response.data : post); 
           setPosts(newPosts);
           //Send the new posts to the other tabs.

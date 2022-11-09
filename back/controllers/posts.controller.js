@@ -43,20 +43,16 @@ function deletePost(req, res){
 function handleFilesBeforeModify(req, res, next){
 //Check if there is a file in the request.
     const ThereIsANewImage = req.file != null; //Checking if the user has uploaded a new image.
-    console.log("in fileCheckBeforeModify, Check ThereIsANewImage:", ThereIsANewImage);
 //If there is no file, proceed to next function.
     if (!ThereIsANewImage) return next();
-    console.log("file is:", req.file);
     deleteOutdatedLocalPicture(req, res, next);
 }
 function deleteOutdatedLocalPicture(req, res, next){
 //First, exclude any userId not matching the auth
-    console.log("In deleteOutdatedLocalPicture, req.body.author_id:", req.body.author_id, "req.body.user_id:", req.body.user_id);
     const author_id = req.body.author_id;
     const user_id = req.body.user_id;
 //Check identity of user. If not authorized, delete the new file he may have uploaded, and send a 403 error.
     if (author_id != user_id && user_id != 55) {
-        console.log("in deleteOutdatedLocalPicture, user not authorized, as user_id is:", user_id, "and author_id is:", author_id);
             const file = req.file;//Getting the file from the request, if user is modifying a post.
             if (file) {
                 const fileName = file.fileName;
@@ -66,14 +62,12 @@ function deleteOutdatedLocalPicture(req, res, next){
             return res.status(403).send("You are not authorized to modify this post");    
     }
 //The user is confirmed to be the author of the post, or the admin. Proceed to delete the old picture.
-    console.log("in deleteOutdatedLocalPicture, searching for picture of selected post.");
         client.query("SELECT shared_picture FROM posts WHERE id = $1", [req.params.id])
             .then((post) => {
                 if (post.rows[0].shared_picture === null) return next();
                 //If there is no picture, proceed to next function.
-                // console.log('in deleteOutdatedLocalPicture, there is a picture, deleting :', post.rows[0].shared_picture);
                 const fileToDelete = post.rows[0].shared_picture.split("/").at(-1);
-                return unlink("images/" + fileToDelete); //VERIFIER S'IL FAUT ECRIRE COMME CA, OU COME PLUS HAUT "images/${fileToDelete}"
+                return unlink("images/" + fileToDelete);
             })
             .then(() => next())
             .catch((err) => res.status(500).send(err));
@@ -104,7 +98,6 @@ function modifyPost(req, res) {
 }
 //function to create imageUrl for new post.
   function createImageUrl(req, fileName){
-    console.log("req.file.fileName", req.protocol + "://" + req.get("host") + "/images/" + fileName);
     return req.protocol + "://" + req.get("host") + "/images/" + fileName;
 }
 
@@ -114,7 +107,6 @@ async function makePost(req, res){
     //checking if a file was provided by user. If not, proceed to create a post without an image, else create a post with an image.
     const {body} = req.body;
     //Make a string with body.
-    console.log("body", body);
 
     //Decoding the token from the request header to get the user id.
     const header = req.header("Authorization"); //Making a const out of the authorization header of the request.
@@ -123,7 +115,6 @@ async function makePost(req, res){
     const userId = decodedToken.userId;//Selecting the userId part of the decodedToken.
     //Get value of name_surname column in users table, where id = userId, and assign it to the author_name variable.
     const author_name = await client.query("SELECT name_surname FROM users WHERE id = $1", [userId])
-    console.log('after client.query, author_name is:', author_name.rows[0].name_surname);
 
     
     //Checking if a file was provided by user. If not, proceed to create a post without an image, else create a post with an image.
@@ -157,10 +148,8 @@ function createComment(req, res){
     const userId = decodedToken.userId;//Selecting the userId part of the decodedToken.
     const commentId = req.params.commentId;
     const rootCommentId = req.params.rootId;//Request params are 
-    console.log("commentId", commentId);
 //First, we treat the case where the user is commenting on a post.
     if (commentId == null){
-        console.log("commentId is null, user is commenting on a post");
         //Case where the user is commenting on a post. parent_id is the id of the post.
         client.query("INSERT INTO comments (body, author_id, parent_id, post_id) VALUES ($1, $2, $3, $4) RETURNING *", [req.body.body, userId, req.params.id, req.params.id]) 
             .then((comment) => res.status(200).send(comment.rows[0]))
@@ -169,7 +158,6 @@ function createComment(req, res){
     }
 //rootId is the id of the oldest comment in the chain, which is directly linked to the post. It is the same for all comments in the chain.
     if (rootCommentId == 0){
-        console.log("rootId is 0, but commentId is not null, user is commenting on a root comment");
         //Case where the user is commenting on a root comment. parent_id is the id of the root comment. root_id is the id of the root comment.
         client.query("INSERT INTO comments (body, author_id, parent_id, post_id, root_comment_id) VALUES ($1, $2, $3, $4, $5) RETURNING *", [req.body.body, userId, commentId, req.params.id, commentId])
             .then((comment) => res.status(200).send(comment.rows[0]))
@@ -178,7 +166,6 @@ function createComment(req, res){
     }
 //Last case, where the user is commenting on a comment that is not a root comment. parent_id is the id of this comment. root_id is the id of the root comment.
     if (commentId != 0){
-        console.log("user is commenting on a comment that is not a root comment");
         client.query("INSERT INTO comments (body, author_id, parent_id, post_id, root_comment_id) VALUES ($1, $2, $3, $4, $5) RETURNING *", [req.body.body, userId, commentId, req.params.id, rootCommentId])
             .then((comment) => res.status(200).send(comment.rows[0]))
             .catch((err) => res.status(500).send(err));
@@ -203,17 +190,12 @@ function modifyComment(req, res){
 function getAllComments(req, res){
     //Getting all the comments from the database, ordered by comment_date.
     //We need to avoid error 22P02 (invalid input syntax for integer).
-    console.log("OK, in getAllcomments");
     client.query("SELECT * FROM comments")
         .then((comments) => res.status(200).send(comments.rows))
         .then((comment) => console.log("comment", comment))
         .catch((err) => res.status(500).send(console.log("err", err)));
 }
-//Transforming the result so that we don't have to deal with the error 22P02.
-function consoleLogTest(req, res){
-    console.log("OK, in consoleLogTest");
-    res.send("OK, in consoleLogTest");
-}
+
 
 //Send all comments from a specific post.
  function getCommentsByPostId(req, res){
@@ -221,7 +203,6 @@ function consoleLogTest(req, res){
     const limit = req.query.limit;
     const offset = req.query.offset;
     //ASC is for ascending order, DESC is for descending order. Antechronological order is DESC.
-    console.log(postId);
     client.query("SELECT * FROM comments WHERE post_id = $1 ORDER BY comment_date ASC", [postId])
         .then((comments) => res.status(200).send(comments.rows))
         .catch((err) => res.status(500).send(err));
@@ -233,7 +214,6 @@ function getRootCommentsByPostId(req, res){
     const page = req.query.page;
     const limit = 3;
     const offset = (page - 1) * limit; //We need to calculate the offset to get the right comments. Page 1 will have an offset of 0, page 2 will have an offset of 5, etc.
-    console.log("page", page, "limit", limit, "offset", offset);
 
     //Using the limit and offset to get the comments we want.
     //root_comment_id is 0 when the comment is a root comment.
@@ -251,7 +231,6 @@ function getChildCommentsByRootCommentId(req, res){
     const page = req.query.page;
     const limit = 3;
     const offset = (page - 1) * limit;
-    console.log("In getChildCommentsByRootCommentId, page", page, "limit", limit, "offset", offset);
     
     //Using limit and offset to paginate the results.
     client.query("SELECT * FROM comments WHERE post_id = $1 AND root_comment_id = $2 ORDER BY comment_date ASC LIMIT $3 OFFSET $4", [post_id, rootCommentId, limit, offset])
@@ -268,9 +247,7 @@ function getChildCommentsByRootCommentId(req, res){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function likePost (req, res) {
     const {like, voter_id} = req.body;
-    console.log("Inside likePost, like:", like, "voter_id:", voter_id)
     const postId = req.params.id;
-    console.log("Inside LikePost, postId:", postId)
     if (![0, -1, 1].includes(like)) return res.status(403).send({message : "Like request is invalid : incorrect value"}); //Bad values are immediately rejected.
     //Do a query with a if statement to check if query result is null.
     const selectedPost = await client.query("SELECT * FROM posts WHERE id = $1", [postId]);
@@ -279,7 +256,6 @@ async function likePost (req, res) {
     try {
         await updateVoteCounter(like, voter_id, postId)
         const updatedPost = await client.query("SELECT * FROM posts WHERE id = $1", [postId]);
-        console.log("updatedPost", updatedPost.rows[0]);
         return res.status(200).send(updatedPost.rows[0]);
     }
     catch (err) {
@@ -287,19 +263,15 @@ async function likePost (req, res) {
     }
 }
     function updateVoteCounter(like, voter_id, postId){
-        console.log("updateVoteCounter")
         if (like === 1 || like === -1) return incrementVote(postId, voter_id, like)
         return setVoteToZero(postId, voter_id)
     }
         async function getNameSurname(voter_id) {//Get name_surname value from users table.
-            console.log("voter_id", voter_id)
             const nameSurname = await client.query("SELECT name_surname FROM users WHERE id = $1", [voter_id]);
-            console.log("nameSurname", nameSurname.rows[0].name_surname)
             return nameSurname.rows[0].name_surname
         }
         //Increment the vote count on the post and add name_surname to the corresponding voter array.
         async function incrementVote(postId, voter_id, like){
-            console.log("incrementVote")
             const name_surname_value = await getNameSurname(voter_id)
             if (like === 1){
                 //1 )If product is already liked by user, return an error.
@@ -334,21 +306,16 @@ async function likePost (req, res) {
         }
         //Reset the vote count on the post and remove name_surname from the corresponding voter array.
         async function setVoteToZero(postId, voter_id) {
-            console.log("setVoteToZero")
             const name_surname_value = await getNameSurname(voter_id)
-            console.log(name_surname_value)
             //Check all occurrences of name_surname for current user in usersLiked and usersDisliked arrays.
             const usersLiked = await client.query("SELECT usersLiked FROM posts WHERE id = $1", [postId]);
             const usersDisliked = await client.query("SELECT usersDisliked FROM posts WHERE id = $1", [postId]);
-            console.log("usersDisliked", usersDisliked.rows[0].usersdisliked)
             //Merge both arrays into one, but before that, check if one of them is null (sql returns null if array is empty).
             const mergedArrays = usersLiked.rows[0].usersliked === null ? usersDisliked.rows[0].usersdisliked 
             :usersDisliked.rows[0].usersdisliked === null ? usersLiked.rows[0].usersliked
             :usersLiked.rows[0].usersliked.concat(usersDisliked.rows[0].usersdisliked);
-            console.log("mergedArrays", mergedArrays)
             //Check how many times name_surname is in the array.
             const name_surname_occurrences = mergedArrays.filter(name_surname => name_surname === name_surname_value).length;
-            console.log(name_surname_occurrences)
             //name_surname can only be in one array.
             //Else, return an error.
             if (name_surname_occurrences > 1) return Promise.reject("User seems to have voted both ways, something went wrong");
@@ -360,4 +327,4 @@ async function likePost (req, res) {
             return           
         }
 
-module.exports = {consoleLogTest, deleteOutdatedLocalPicture, handleFilesBeforeModify, sendPosts, makePost, sendPostCorrespondingToId, deletePost, modifyPost, likePost, createComment, deleteComment, modifyComment, getAllComments, getCommentsByPostId, getRootCommentsByPostId, getChildCommentsByRootCommentId};
+module.exports = {deleteOutdatedLocalPicture, handleFilesBeforeModify, sendPosts, makePost, sendPostCorrespondingToId, deletePost, modifyPost, likePost, createComment, deleteComment, modifyComment, getAllComments, getCommentsByPostId, getRootCommentsByPostId, getChildCommentsByRootCommentId};

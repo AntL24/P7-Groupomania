@@ -15,12 +15,9 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 const PostPage = ({ handleLike, posts, handleDelete }) => { //Props are passed from App.js
     const { id } = useParams(); //id is the id of the post we want to display
     const post = posts.find(post => (post.id).toString() === id);//To use strict equality, we need to convert the id to a string.
-    console.log('handleLike in PostPage is', handleLike);
     const userId = localStorage.getItem('userId');
     const [viewPortWidth, setViewPortWidth] = useState(window.innerWidth);
-    const [comments, setComments] = useState(['']);
-    const [pageCount, setpageCount] = useState(0);
-    let limit = 10;
+
 
     useEffect(() => {
         const handleResize = () => setViewPortWidth(window.innerWidth);
