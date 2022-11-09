@@ -18,6 +18,8 @@ app.use(express.urlencoded({extended: true}));
 //Helmet help us secure our express server 
 app.use(helmet(
     {crossOriginResourcePolicy: false},
+    //sameorigin false
+    
     ));
     
 

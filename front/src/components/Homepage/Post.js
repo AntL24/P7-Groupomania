@@ -15,8 +15,6 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 const Post = ({ post, handleLike, handleDelete }) => {
 
     //Set state for heart color
-    const dislikersId = post.dislikersid;
-    const likersId = post.likersid;
     const likes = post.likes;
     const dislikes = post.dislikes;
     const userId = localStorage.getItem('userId');
@@ -40,24 +38,26 @@ const Post = ({ post, handleLike, handleDelete }) => {
 
    
     return (
-        <Link to={`/post/${post.id}`} style={{color: "inherit", textDecoration: "inherit"}}>
 
         <article className="post">
-                <span className="AuthorNameAndDate">
-                    <p><FontAwesomeIcon icon={faUser}/>
-                    {post.author_name}</p>
-                    {viewPortWidth > 1024 ? <p>le {formatedPost_hour}</p> : <p>{diffDays < 7 ? diffDays + " jours" : diffWeeks < 4 ? diffWeeks + " sem." : diffMonths < 12 ? diffMonths + " mois" : diffYears + " ans"}</p>}
-                </span>
-               
-                <div className="postContent">
-                        <p className="postBody">{
-                            (post.body).length <= 500
-                                ? post.body//If the post is less than 500 characters long, we display the whole post.
-                                : (post.body).slice(0, 500) + "..." //If the post is more than 500 characters long, we display the first 500 characters and add "...".
-                        }</p>
-                        {post.shared_picture && <img className="postImage" src={post.shared_picture} alt = "post illustration"/>}
+            <Link to={`/post/${post.id}`} style={{color: "inherit", textDecoration: "inherit"}}>
+                <div className="post__container">
+                    <span className="AuthorNameAndDate">
+                        <p><FontAwesomeIcon icon={faUser}/>
+                        {post.author_name}</p>
+                        {viewPortWidth > 1024 ? <p>le {formatedPost_hour}</p> : <p>{diffDays < 7 ? diffDays + " jours" : diffWeeks < 4 ? diffWeeks + " sem." : diffMonths < 12 ? diffMonths + " mois" : diffYears + " ans"}</p>}
+                    </span>
+                
+                    <div className="postContent">
+                            <p className="postBody">{
+                                (post.body).length <= 500
+                                    ? post.body//If the post is less than 500 characters long, we display the whole post.
+                                    : (post.body).slice(0, 500) + "..." //If the post is more than 500 characters long, we display the first 500 characters and add "...".
+                            }</p>
+                            {post.shared_picture && <img className="postImage" src={post.shared_picture} alt = "post illustration"/>}
+                    </div> 
                 </div>
-
+            </Link>
             <div className="postInteractions">
                 {/* On click, we pass post.id and a true value to the handleLike function */}
                 <div className="like"
@@ -71,22 +71,20 @@ const Post = ({ post, handleLike, handleDelete }) => {
                     type="submit" onClick={
                         (e) =>
                         handleLike(e, post.id, false, post.dislikersid)}>
-                    {dislikes}
-                    <div className="circle"></div>
-                    {post.dislikersid && post.dislikersid.includes(userId) ? <FontAwesomeIcon icon={faThumbsDown} className='redHeart'/> : <FontAwesomeIcon icon={faThumbsDownEmpty} className='heart'/>}
+                        {dislikes}
+                        <div className="circle"></div>
+                        {post.dislikersid && post.dislikersid.includes(userId) ? <FontAwesomeIcon icon={faThumbsDown} className='redHeart'/> : <FontAwesomeIcon icon={faThumbsDownEmpty} className='heart'/>}
                 </div>
                 <Link to={`/modify/${post.id}`}>
                     <button className="modifyButton" type="submit" >
-                       {viewPortWidth > 1024 ?  <p>Modify</p>  :<FontAwesomeIcon icon={faEdit} className='modifyIcon'/>}
+                    {viewPortWidth > 1024 ?  <p>Modify</p>  :<FontAwesomeIcon icon={faEdit} className='modifyIcon'/>}
                     </button>
                 </Link>
-                <button onClick={(e) => handleDelete(e, post.author_id, post.id)} className="deleteButton" type="submit" >
-                    {viewPortWidth > 1024 ? <p>Delete</p> : <FontAwesomeIcon icon={faTrash} className='trashIcon'/> }
-                </button>
-
-            </div>
+                    <button onClick={(e) => handleDelete(e, post.author_id, post.id)} className="deleteButton" type="submit" >
+                        {viewPortWidth > 1024 ? <p>Delete</p> : <FontAwesomeIcon icon={faTrash} className='trashIcon'/> }
+                    </button>
+                </div>
         </article>
-        </Link>
     );
 };
 

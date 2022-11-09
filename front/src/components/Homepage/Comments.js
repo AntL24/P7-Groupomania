@@ -5,11 +5,10 @@ import React, {useState, useEffect, useCallback} from 'react';
 import {useParams} from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
 
-//Import an icon to send a comment
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
-const Comments = ({/*comment, setComments, comments*/}) => {
+const Comments = ({ }) => {
  
     const token = localStorage.getItem('token');
     const { id } = useParams();
@@ -60,6 +59,9 @@ const Comments = ({/*comment, setComments, comments*/}) => {
                 console.log("No more replies to load");
                 setRepliesHasMore(repliesHasMore.set(rootId, false));
                 return;
+            }
+            if (response.data.length < 3) {
+                setRepliesHasMore(repliesHasMore.set(rootId, false));
             }
             //If the response is not empty, we add the replies to the state array : also prevent duplicates by checking if the reply is already in the array
             setReplies(replies => {
