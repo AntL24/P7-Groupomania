@@ -89,7 +89,6 @@ const Comments = ({ }) => {
             }
         })
             .then(response => {
-                console.log(response);
                 setRootComments([response.data, ...rootComments]);
             })
             .catch(error => {
@@ -108,7 +107,6 @@ const Comments = ({ }) => {
             }
         })
             .then(response => {
-                console.log(response);
                 setReplies([response.data, ...replies]);
             })
             .catch(error => {
@@ -193,7 +191,7 @@ const Comments = ({ }) => {
             <div className="comments__list">
                 {rootComments.map((comment) => {
                     return (
-                            <Comment comment={comment} replies={replies} key={comment.id} />
+                        <Comment comment={comment} replies={replies} key={comment.id} />
                     )
                 })}
             </div>

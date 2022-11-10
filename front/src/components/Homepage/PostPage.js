@@ -18,7 +18,7 @@ const PostPage = ({ handleLike, posts, handleDelete }) => { //Props are passed f
     const userId = localStorage.getItem('userId');
     const [viewPortWidth, setViewPortWidth] = useState(window.innerWidth);
 
-
+//This hook is used to update the viewport width state variable when the viewport width changes.
     useEffect(() => {
         const handleResize = () => setViewPortWidth(window.innerWidth);
         window.addEventListener('resize', handleResize);
@@ -46,14 +46,14 @@ const PostPage = ({ handleLike, posts, handleDelete }) => { //Props are passed f
                             />}
                         </div>
                         <div className="postInteractions">
-                            <div className="like"
+                            <div className="like" aria-label="Like"
                             type="submit" onClick={(e) =>
                                 handleLike(e, post.id, true, post.likersid)}>
                                 {post.likes}
                                 <div className="circle"></div>
                             {post.likersid && post.likersid.includes(userId) ? <FontAwesomeIcon icon={faHeartFull} className='redHeart'/> : <FontAwesomeIcon icon={faHeart} className='heart'/>}
                             </div>
-                            <div className="dislike"
+                            <div className="dislike" aria-label="Dislike" 
                             type="submit" onClick={
                                 (e) =>
                                 handleLike(e, post.id, false, post.dislikersid)}>
@@ -62,11 +62,11 @@ const PostPage = ({ handleLike, posts, handleDelete }) => { //Props are passed f
                                 {post.dislikersid && post.dislikersid.includes(userId) ? <FontAwesomeIcon icon={faThumbsDown} className='redHeart'/> : <FontAwesomeIcon icon={faThumbsDownEmpty} className='heart'/>}
                             </div>
                             <Link to={`/modify/${post.id}`}>
-                            <button className="postPageButton" type="submit" >
-                                {viewPortWidth > 1024 ?  <p>Modify</p>  :<FontAwesomeIcon icon={faEdit} className='modifyIcon'/>}
-                            </button>
+                                <button className="postPageButton" type="submit" aria-label="Modify post"  >
+                                    {viewPortWidth > 1024 ?  <p>Modify</p>  :<FontAwesomeIcon icon={faEdit} className='modifyIcon'/>}
+                                </button>
                             </Link>
-                            <button onClick={(e) => handleDelete(e, post.author_id, post.id)} className="postPageButton" type="submit" >
+                            <button onClick={(e) => handleDelete(e, post.author_id, post.id)} className="postPageButton" type="submit" aria-label="Delete post" >
                                 {viewPortWidth > 1024 ? <p>Delete</p> : <FontAwesomeIcon icon={faTrash} className='trashIcon'/> }
                             </button>
                         </div>

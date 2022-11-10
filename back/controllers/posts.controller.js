@@ -202,7 +202,7 @@ function getAllComments(req, res){
     const postId = req.params.id;
     const limit = req.query.limit;
     const offset = req.query.offset;
-    //ASC is for ascending order, DESC is for descending order. Antechronological order is DESC.
+    //ASC is for ascending order, DESC is for descending order.
     client.query("SELECT * FROM comments WHERE post_id = $1 ORDER BY comment_date ASC", [postId])
         .then((comments) => res.status(200).send(comments.rows))
         .catch((err) => res.status(500).send(err));

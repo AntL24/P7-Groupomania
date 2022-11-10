@@ -10,6 +10,10 @@ const client = new Client({
      password: process.env.DATABASE_PASSWORD
 });
 
+//Connexion link alternative :
+//const client = new Client(process.env.DATABASE_URL);
+
+
 client.connect((err) => {
      if (err){
          console.log(err);

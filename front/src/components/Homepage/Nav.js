@@ -25,10 +25,9 @@ const Nav = ({search, setSearch, posts, setPosts}) => {
         window.addEventListener('resize', handleResize); //Add event listener to window
         return () => window.removeEventListener('resize', handleResize); //Remove event listener when component unmounts
     }, []);
-   
+
     function handleRefresh() {
         if (window.location.pathname === '/'){
-            //force update of the Home component
             setPosts([...posts]);
         }
     }
@@ -62,7 +61,6 @@ const Nav = ({search, setSearch, posts, setPosts}) => {
                         }}
                         onBlur = {() => {
                             //onBlur means that if the input is not focused anymore, we apply effects to the input.
-                            // if (windowWidth <1024) {
                                 //Remove the effects with unset values.
                                 document.getElementById("BlurEffect").style.display = "none";
                                 document.querySelector(".Home").style.zIndex = "0";
@@ -109,12 +107,12 @@ const Nav = ({search, setSearch, posts, setPosts}) => {
                 </div>
             </form>
             <ul className = "navLinks">
-                <li><Link to="/" className="navLink" onClick={handleRefresh}><FontAwesomeIcon icon={faHome} /><div className="navbarText">Home</div></Link></li>
-                <li><Link to="/newpost" className='navLink'><FontAwesomeIcon icon={faFeather} /><div className="navbarText">New Post</div></Link></li>
-                <li><Link to="/" className='navLink'><FontAwesomeIcon icon={faBell} /><div className="navbarText">Notifications</div></Link></li>
-                <li><Link to="/" className='navLink'><FontAwesomeIcon icon={faEnvelope} /><div className="navbarText">Messages</div></Link></li>
-                <li><Link to="/" className='navLink'><FontAwesomeIcon icon={faUser} /><div className="navbarText">Profile</div></Link></li>
-                <li><Logout /></li>
+                <li><Link to="/" className="navLink" onClick={handleRefresh} aria-label="Home"><FontAwesomeIcon icon={faHome} /><div className="navbarText">Home</div></Link></li>
+                <li><Link to="/newpost" className='navLink'><FontAwesomeIcon icon={faFeather} aria-label="New post" /><div className="navbarText">New Post</div></Link></li>
+                <li><Link to="/" className='navLink'><FontAwesomeIcon icon={faBell} aria-label="Notifications" /><div className="navbarText">Notifications</div></Link></li>
+                <li><Link to="/" className='navLink'><FontAwesomeIcon icon={faEnvelope} aria-label="Messages" /><div className="navbarText">Messages</div></Link></li>
+                <li><Link to="/" className='navLink'><FontAwesomeIcon icon={faUser} aria-label="Profile" /><div className="navbarText">Profile</div></Link></li>
+                <li><Logout/></li>
             </ul>
         </nav>
     );

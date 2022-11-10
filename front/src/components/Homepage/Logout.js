@@ -20,7 +20,7 @@ function Logout () {
     
     return (
         <div className="navbarLogout">
-            <div onClick={logout}><FontAwesomeIcon icon={faSignOut}/>
+            <div onClick={logout} aria-label="Logout"><FontAwesomeIcon icon={faSignOut}/>
                 <div className="navbarText">
                     Logout
                 </div>

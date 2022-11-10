@@ -48,7 +48,7 @@ function App () {
     const [selectedFile, setSelectedFile] = useState(null);
     const navigate = useNavigate();
 
-//Sync data among multiple sessions with channel and useEffect.
+//Sync data among multiple sessions with useMemo hook and useEffect.
     const channel = React.useMemo(() => new BroadcastChannel('posts'), []);
       useEffect(() => {
         //Use the channel to listen for messages from other tabs.
@@ -261,7 +261,7 @@ function App () {
               <Route path="/newpost"
                 element=
                   {<NewPost
-                    postBody={postBody} setPostBody={setPostBody}
+                    postBody={postBody} setPostBody={setPostBody} 
                     handleFileSelect={handleFileSelect}
                     handleSubmit={handleSubmit}
                   />}

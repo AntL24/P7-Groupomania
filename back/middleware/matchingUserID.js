@@ -26,7 +26,7 @@ function matchingUserID (req, res, next) {
   });
   
   //If admin, then next.
-  if (userId === 1) {
+  if (userId === 55) {
     next();
   }
 }          
